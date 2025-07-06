@@ -3,7 +3,11 @@
 
 #include "pixeldrawer.hpp"
 #include "ppm.hpp"
+
 #include "circle.hpp"
+#include "visualizer.hpp"
+
+#include "transformations.hpp"
 
 using namespace std;
 
@@ -11,11 +15,10 @@ unsigned int Factorial( unsigned int number ) {
     return number <= 1 ? number : Factorial(number-1)*number;
 }
 
-int main() {
+void drawCircle() {
     std::ofstream outFile("output.ppm"); 
     if (!outFile) {
         std::cerr << "Failed to open file.\n";
-        return 1;
     }
 
     PixelDrawer* drawer = new PPMPixelDrawer(outFile, 50, 50);
@@ -26,5 +29,34 @@ int main() {
     circleD->draw(Pixel{25, 25}, 5, fill, bg);
 
     outFile.close(); // optional, done automatically on destruction
-    return 0;
+}
+
+
+int main() {
+    int width = 1000;
+    int height = 1000;
+
+    std::ofstream outFile("normalized.ppm"); 
+    if (!outFile) {
+        std::cerr << "Failed to open file.\n";
+    }
+
+    PixelDrawer* drawer = new PPMPixelDrawer(outFile, width, height);
+    PixelVisualizer* pixelVis = new PixelVisualizer(drawer);
+
+    auto pixels = getPixels(width, height);
+    getPixelCenters(pixels);
+
+    normalize(pixels, width, height);
+    getCV(pixels);
+    adjustAspectRatio(pixels, width, height);
+
+    auto vectors = getVectors(pixels);
+    normalizeVectors(vectors);
+
+    auto vectorVis = new VectorVisualizer(drawer);
+    vectorVis->generate(vectors, 255);
+
+    return 0;    
+
 }

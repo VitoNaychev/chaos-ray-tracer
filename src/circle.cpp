@@ -1,5 +1,4 @@
 #include <fstream>
-#include "types.hpp"
 #include "circle.hpp"
 
 using namespace std;
