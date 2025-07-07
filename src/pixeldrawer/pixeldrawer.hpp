@@ -10,8 +10,8 @@ struct Color {
 };
 
 class PixelDrawer{
-    public:
-    // virtual ~PixelDrawer();             
+public:
+    virtual ~PixelDrawer() {};             
     virtual void draw(Color c) = 0;
 };
 

@@ -1,6 +1,6 @@
 #include <vector>
 #include "types.hpp"
-#include "transformations.hpp"
+#include "raygen.hxx"
 
 std::vector<Pixel> getPixels(int width, int height) {
     std::vector<Pixel> pixels;

@@ -8,9 +8,11 @@ using namespace std;
 
 const int uint8_max = 255;
 
-
-PPMPixelDrawer::PPMPixelDrawer(std::ostream& out, int width, int height) : out {out}, width {width}, height {height} {
+PPMPixelDrawer::PPMPixelDrawer(ostream& out, int width, int height) : out {out}, width {width}, height {height} {
     writeHeader(out, width, height);
+}
+
+PPMPixelDrawer::~PPMPixelDrawer() {
 }
 
 void PPMPixelDrawer::draw(Color c) {

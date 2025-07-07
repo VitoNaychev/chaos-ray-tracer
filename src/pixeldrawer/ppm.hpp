@@ -8,8 +8,9 @@
 class PPMPixelDrawer : public PixelDrawer {
 public:
     PPMPixelDrawer(std::ostream& out, int width, int height);
-    void draw(Color c) override;
-    private:
+    ~PPMPixelDrawer();
+    void draw(Color c);
+private:
     std::ostream& out;
     int width, height;
 private:

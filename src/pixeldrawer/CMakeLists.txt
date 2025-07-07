@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(ChaosCamp LANGUAGES CXX)
+project(PixelDrawer LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_library(PixelDrawer ppm.cpp)
+target_include_directories(PixelDrawer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(CTest)
 
@@ -16,8 +19,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch2)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src)
+add_executable(PixelDrawerTest ppm_test.cxx)
+target_link_libraries(PixelDrawerTest PRIVATE PixelDrawer Catch2::Catch2WithMain)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/visualizer)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/raygen)
+include(Catch)
+catch_discover_tests(PixelDrawerTest)

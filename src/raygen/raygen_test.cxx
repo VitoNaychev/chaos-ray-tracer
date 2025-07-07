@@ -1,8 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
 
-#include "../src/types.hpp"
-#include "../src/transformations.hpp"
+#include "types.hpp"
+#include "raygen.hxx"
 
 TEST_CASE("Get pixels for image with width and height") {
     std::vector<Pixel> want = {
