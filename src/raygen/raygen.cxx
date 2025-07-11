@@ -4,11 +4,11 @@
 
 std::vector<Pixel> getPixels(int width, int height) {
     std::vector<Pixel> pixels;
-    for (int i = 0; i < width; ++ i) {
-        for (int j = 0; j < height; j++) {
+    for (int i = 0; i < height; ++ i) {
+        for (int j = 0; j < width; j++) {
             Pixel p = Pixel {
-                .x = static_cast<float>(i),
-                .y = static_cast<float>(j)
+                .x = static_cast<float>(j),
+                .y = static_cast<float>(i)
             };
             pixels.push_back(p);
         }
@@ -61,4 +61,30 @@ void normalizeVectors(std::vector<Vector>& vectors) {
     for (auto& v : vectors) {
         v.normalize();
     }
+}
+
+std::vector<Ray> getRays(const Vector& origin, const std::vector<Vector>& vectors) {
+    std::vector<Ray> rays;
+    for (auto& v : vectors) {
+        Ray r = {
+            .origin = origin,
+            .direction = v,
+        };
+        rays.push_back(r);
+    }
+    return rays;
+}
+
+std::vector<Ray> generateRays(int width, int height, Vector origin) {
+    auto pixels = getPixels(width, height);
+    getPixelCenters(pixels);
+
+    normalize(pixels, width, height);
+    getCV(pixels);
+    adjustAspectRatio(pixels, width, height);
+
+    auto vectors = getVectors(pixels);
+    normalizeVectors(vectors);
+
+    return getRays(origin, vectors);
 }

@@ -15,5 +15,6 @@ void adjustAspectRatio(std::vector<Pixel>& pixels, int width, int height);
 std::vector<Vector> getVectors(std::vector<Pixel>& pixels);
 void normalizeVectors(std::vector<Vector>& vectors);
 
+std::vector<Ray> generateRays(int width, int height, Vector origin);
 
 #endif
