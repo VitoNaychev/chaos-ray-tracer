@@ -1,7 +1,7 @@
 #include <iostream>
 #include <array>
 #include <cmath>
-#include "types.hpp"
+#include "types.hxx"
 
 bool operator==(const Color& c1, const Color& c2) {
     return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
@@ -161,37 +161,4 @@ Vector operator*(const Vector& lhs, const Matrix& rhs) {
 
 bool operator==(const Matrix& lhs, const Matrix& rhs) {
     return lhs.m == rhs.m;
-}
-
-Vector Camera::getPosition() {
-    return position;
-}
-
-Matrix Camera::getRotation() {
-    return rotation;
-}
-
-Camera::Camera(Vector pos, Matrix rot) : position {pos}, rotation {rot} {}
-
-void Camera::dolly(const float z) {
-    position.z += z;
-}
-
-void Camera::jib(const float y) {
-    position.y += y;
-}
-
-void Camera::truck(const float x) {
-    position.x += x;
-}
-
-void Camera::pan(const float angle) {
-    std::array<std::array<float, 3>, 3> panArr = {{
-        {{std::cos(angle), 0.0f, -std::sin(angle)}},
-        {{0.0f, 1.0f, 0.0f}},
-        {{std::sin(angle), 0.0f, std::cos(angle)}}
-    }};
-    Matrix panMatrix {panArr};
-
-    rotation = rotation * panMatrix;
 }

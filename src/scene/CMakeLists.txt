@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RayGen LANGUAGES CXX)
+project(Scene LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(RayGen raygen.cxx)
-target_link_libraries(RayGen PRIVATE LinAlg Scene)
-target_include_directories(RayGen INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(Scene scene.cxx)
+target_link_libraries(Scene PRIVATE LinAlg)
+target_include_directories(Scene INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(CTest)
 
@@ -20,8 +20,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch2)
 
-add_executable(RayGenTest raygen_test.cxx)
-target_link_libraries(RayGenTest PRIVATE RayGen Scene LinAlg Catch2::Catch2WithMain)
+add_executable(SceneTest scene_test.cxx)
+target_link_libraries(SceneTest PRIVATE Scene LinAlg Catch2::Catch2WithMain)
 
 include(Catch)
-catch_discover_tests(RayGenTest)
+catch_discover_tests(SceneTest)

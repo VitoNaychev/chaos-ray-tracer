@@ -3,7 +3,7 @@
 #include <cmath>
 #include <numbers>
 
-#include "types.hpp"
+#include "types.hxx"
 #include "raygen.hxx"
 
 bool nearlyEqual(Vector a, Vector b, float epsilon = 1e-4) {

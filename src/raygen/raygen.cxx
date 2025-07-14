@@ -1,5 +1,5 @@
 #include <vector>
-#include "types.hpp"
+#include "types.hxx"
 #include "raygen.hxx"
 
 

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <numbers>
 
-#include "types.hpp"
+#include "types.hxx"
 #include "raygen.hxx"
 
 #include "pixeldrawer.hpp"

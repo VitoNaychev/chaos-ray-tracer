@@ -3,7 +3,8 @@
 #include <iostream>
 #include <format>
 
-#include "types.hpp"
+#include "scene.hxx"
+#include "types.hxx"
 
 using namespace rapidjson;
 using namespace std;

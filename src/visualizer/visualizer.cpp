@@ -3,7 +3,7 @@
 
 #include "visualizer.hpp"
 
-#include "types.hpp"
+#include "types.hxx"
 #include "pixeldrawer.hpp"
 
 

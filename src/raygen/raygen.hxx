@@ -2,7 +2,8 @@
 #define TRANSFORMATIONS_HPP
 
 #include <vector>
-#include "types.hpp"
+#include "scene.hxx"
+#include "types.hxx"
 
 class RayGenerator {
 public:

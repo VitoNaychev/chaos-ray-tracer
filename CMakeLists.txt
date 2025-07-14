@@ -16,12 +16,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch2)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/linalg)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/visualizer)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/raygen)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/scene)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/parser)
 
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/triangle)

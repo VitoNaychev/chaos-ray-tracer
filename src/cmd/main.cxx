@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cmath>
 
-#include "types.hpp"
+#include "types.hxx"
 #include "crtscene.hpp"
 #include "raygen.hxx"
 

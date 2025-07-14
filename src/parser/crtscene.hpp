@@ -4,7 +4,8 @@
 #include <iostream>
 #include <rapidjson/document.h>
 
-#include "types.hpp"
+#include "scene.hxx"
+#include "types.hxx"
 
 std::string getStringValue(std::istream&);
 Scene parseCRTScene(std::istream& input);

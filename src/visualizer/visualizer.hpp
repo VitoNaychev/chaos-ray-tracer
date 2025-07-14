@@ -1,7 +1,7 @@
 #ifndef PIXEL_VISUALIZER_HPP
 #define PIXEL_VISUALIZER_HPP
 
-#include "types.hpp"
+#include "types.hxx"
 #include "pixeldrawer.hpp"
 
 

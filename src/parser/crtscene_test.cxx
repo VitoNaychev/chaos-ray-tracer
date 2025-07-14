@@ -7,7 +7,7 @@
 #include <iostream>
 
 #include "crtscene.hpp"
-#include "types.hpp"
+#include "types.hxx"
 
 using namespace std;
 using namespace rapidjson;

@@ -14,8 +14,8 @@ FetchContent_Declare(
 FetchContent_Populate(rapidjson)
 
 add_library(Parser crtscene.cxx)
-target_link_libraries(Parser Types)
-target_include_directories(Parser PUBLIC ${rapidjson_SOURCE_DIR}/include inte)
+target_link_libraries(Parser PRIVATE Scene LinAlg)
+target_include_directories(Parser PUBLIC ${rapidjson_SOURCE_DIR}/include)
 target_include_directories(Parser INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(CTest)
@@ -28,7 +28,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(catch2)
 
 add_executable(ParserTest crtscene_test.cxx)
-target_link_libraries(ParserTest PRIVATE Parser Types Catch2::Catch2WithMain)
+target_link_libraries(ParserTest PRIVATE Parser Scene LinAlg Catch2::Catch2WithMain)
 target_include_directories(ParserTest PRIVATE ${rapidjson_SOURCE_DIR}/include)
 
 include(Catch)

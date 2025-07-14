@@ -2,7 +2,7 @@
 #define CIRCLE_HPP
 
 #include <fstream>
-#include "types.hpp"
+#include "types.hxx"
 #include "pixeldrawer.hpp"
 
 using namespace std;
