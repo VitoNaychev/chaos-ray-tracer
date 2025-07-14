@@ -4,6 +4,25 @@
 #include <vector>
 #include "types.hpp"
 
+class RayGenerator {
+public:
+    RayGenerator(int width, int height, Camera camera);
+    Ray generate(int x, int y);
+private:
+    void centerPixel(Pixel& p);
+    void normalize(Pixel& p);
+
+    void toCV(Pixel& p);
+    void adjustAspectRatio(Pixel& p);
+
+    Vector vectorFor(const Pixel& p);
+
+    void rotate(Vector& v);
+
+    Camera camera;
+    int width, height;
+};
+    
 
 std::vector<Pixel> getPixels(int width, int height);
 void getPixelCenters(std::vector<Pixel>&);

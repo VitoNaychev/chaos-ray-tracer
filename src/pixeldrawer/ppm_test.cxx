@@ -7,6 +7,7 @@
 #include "ppm.hpp"
 
 using namespace std;
+using namespace pixeldrawer;
 
 TEST_CASE("Writes PPM header") {
     int wantWidth = 250;

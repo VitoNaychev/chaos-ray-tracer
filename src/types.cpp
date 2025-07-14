@@ -1,6 +1,15 @@
 #include <iostream>
 #include <array>
+#include <cmath>
 #include "types.hpp"
+
+bool operator==(const Color& c1, const Color& c2) {
+    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
+}
+
+std::ostream& operator<<(std::ostream& os, const Color& c) {
+    return os << "Color{r=" << c.r << ", g=" << c.g << ", b=" << c.b << "}";
+}
 
 bool operator==(const Pixel& p1, const Pixel& p2) {
     return p1.x == p2.x && p1.y == p2.y; 
@@ -58,6 +67,8 @@ Triangle::Triangle(Vector v0, Vector v1, Vector v2) : v0 {v0}, v1 {v1}, v2 {v2} 
     normal.normalize();
 }
 
+
+
 bool Triangle::intersects(Ray ray) {
     const float err = 1e-8;
     if (normal.dot(ray.direction) >= 0 - err) {
@@ -78,6 +89,31 @@ bool Triangle::intersects(Ray ray) {
     return leftOfE0 && leftOfE1 && leftOfE2 ;
 }
 
+float Triangle::intersectionDistance(Ray ray) {
+    const float err = 1e-8;
+    if (normal.dot(ray.direction) >= 0 - err) {
+        return -1;
+    }
+
+    float rayDist = abs((v0 - ray.origin).dot(normal));
+    float rayProj = abs(ray.direction.dot(normal));
+
+    float t = rayDist/rayProj;
+    
+    Vector p{ray.origin.x + t * ray.direction.x, ray.origin.y + t * ray.direction.y, ray.origin.z + t * ray.direction.z};
+
+    bool leftOfE0 = leftOfEdge(p, v0, v1);
+    bool leftOfE1 = leftOfEdge(p, v1, v2);
+    bool leftOfE2 = leftOfEdge(p, v2, v0);
+
+    if(leftOfE0 && leftOfE1 && leftOfE2) {
+        return t;
+    } else {
+        return -1;
+    }
+}
+
+
 bool Triangle::leftOfEdge(const Vector& p, const Vector& v0, const Vector& v1) {
     Vector e = v0 - v1;
     Vector vp = v0 - p;
@@ -86,6 +122,19 @@ bool Triangle::leftOfEdge(const Vector& p, const Vector& v0, const Vector& v1) {
 }
 
 Matrix::Matrix(std::array<std::array<float, 3>, 3> m) : m {m} {}
+
+Matrix Matrix::identity() {
+    std::array<std::array<float, 3>, 3> identityArr = {{
+        {{1.0f, 0.0f, 0.0f}},
+        {{0.0f, 1.0f, 0.0f}},
+        {{0.0f, 0.0f, 1.0f}}
+    }};
+    return Matrix{identityArr};
+}
+
+std::array<float, 3> Matrix::operator[](int idx) {
+    return m[idx];
+}
 
 Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
     Matrix result;
@@ -138,9 +187,9 @@ void Camera::truck(const float x) {
 
 void Camera::pan(const float angle) {
     std::array<std::array<float, 3>, 3> panArr = {{
-        {{-std::sin(angle), 0.0f, std::cos(angle)}},
+        {{std::cos(angle), 0.0f, -std::sin(angle)}},
         {{0.0f, 1.0f, 0.0f}},
-        {{std::cos(angle), 0.0f, std::sin(angle)}}
+        {{std::sin(angle), 0.0f, std::cos(angle)}}
     }};
     Matrix panMatrix {panArr};
 

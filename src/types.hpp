@@ -2,7 +2,18 @@
 #define TYPES_HPP
  
 #include <ostream>
+#include <vector>
 #include <array>
+
+struct Color {
+    float r;
+    float g;
+    float b;
+};
+
+bool operator==(const Color& c1, const Color& c2);
+
+std::ostream& operator<<(std::ostream& os, const Color& c);
 
 struct Pixel {
     float x;
@@ -38,6 +49,7 @@ public:
     Triangle(Vector v0, Vector v1, Vector v2);
 
     bool intersects(Ray ray);
+    float intersectionDistance(Ray ray);
 private:
    Vector v0, v1, v2;
    Vector normal;
@@ -50,6 +62,10 @@ public:
     Matrix() = default;
     Matrix(std::array<std::array<float, 3>, 3> m);
 
+    static Matrix identity();
+
+    std::array<float, 3> operator[](int idx);
+
     friend Matrix operator*(const Matrix& lhs, const Matrix& rhs);
     friend Vector operator*(const Vector& lhs, const Matrix& rhs);
     
@@ -57,8 +73,6 @@ public:
 private:
     std::array<std::array<float, 3>, 3> m  = {};;
 };
-
-
 
 class Camera {
 public:
@@ -77,6 +91,22 @@ public:
 private:
     Matrix rotation;
     Vector position;
+};
+
+struct Mesh{
+    std::vector<Vector> vertices;
+    std::vector<int> triangleIndicies;
+};
+
+struct Settings {
+    int width, height;
+    Color background;
+};
+
+struct Scene {
+    Settings settings;
+    Camera camera;
+    std::vector<Mesh> objects;
 };
 
 #endif

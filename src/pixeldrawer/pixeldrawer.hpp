@@ -3,6 +3,8 @@
 
 #include <fstream>
 
+namespace pixeldrawer {
+
 struct Color {
     uint8_t r;
     uint8_t g;
@@ -14,6 +16,8 @@ public:
     virtual ~PixelDrawer() {};             
     virtual void draw(Color c) = 0;
 };
+
+}
 
 
 #endif

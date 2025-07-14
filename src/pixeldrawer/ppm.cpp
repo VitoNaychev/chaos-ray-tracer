@@ -6,6 +6,8 @@
 
 using namespace std;
 
+namespace pixeldrawer {
+    
 const int uint8_max = 255;
 
 PPMPixelDrawer::PPMPixelDrawer(ostream& out, int width, int height) : out {out}, width {width}, height {height} {
@@ -23,4 +25,6 @@ void PPMPixelDrawer::writeHeader(ostream& out, int width, int height) {
     out << "P3" << endl;
     out << to_string(width) << " " << to_string(height) << endl;
     out << to_string(UINT8_MAX) << endl;
+}
+
 }

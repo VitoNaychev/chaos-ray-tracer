@@ -132,9 +132,9 @@ TEST_CASE("Trucks camera to the right") {
 TEST_CASE("Pans camera +30 degrees") {
     float angle = std::numbers::pi/6;
     std::array<std::array<float, 3>, 3> rotatedMatrix = {{
-        {{-std::sin(angle), 0.0f, std::cos(angle)}},
+        {{std::cos(angle), 0.0f, -std::sin(angle)}},
         {{0.0f, 1.0f, 0.0f}},
-        {{std::cos(angle), 0.0f, std::sin(angle)}}
+        {{std::sin(angle), 0.0f, std::cos(angle)}}
     }};
     Matrix want {rotatedMatrix};
     

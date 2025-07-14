@@ -2,6 +2,7 @@
 #include "types.hpp"
 #include "raygen.hxx"
 
+
 std::vector<Pixel> getPixels(int width, int height) {
     std::vector<Pixel> pixels;
     for (int i = 0; i < height; ++ i) {
@@ -87,4 +88,56 @@ std::vector<Ray> generateRays(int width, int height, Vector origin) {
     normalizeVectors(vectors);
 
     return getRays(origin, vectors);
+}
+
+RayGenerator::RayGenerator(int width, int height, Camera camera) : width {width}, height {height}, camera {camera} {}
+
+Ray RayGenerator::generate(int x, int y) {
+    Pixel p {float(x), float(y)};
+
+    centerPixel(p);
+    normalize(p);
+
+    toCV(p);
+    adjustAspectRatio(p);
+
+    auto v = vectorFor(p);
+    v.normalize();
+
+    rotate(v);
+    return Ray{
+        .origin = camera.getPosition(),
+        .direction = v,
+    };
+}
+
+void RayGenerator::centerPixel(Pixel& p) {
+    p.x += 0.5;
+    p.y += 0.5;
+}
+
+void RayGenerator::normalize(Pixel& p) {
+    p.x /= width;
+    p.y /= height;
+}
+
+void RayGenerator::toCV(Pixel& p) {
+    p.x = (p.x * 2) - 1;
+    p.y = -((p.y * 2) - 1);
+}
+
+void RayGenerator::adjustAspectRatio(Pixel& p) {
+    p.x *= float(width)/height;
+}
+
+Vector RayGenerator::vectorFor(const Pixel& p) {
+    return Vector {
+        .x = p.x,
+        .y = p.y,
+        .z = camera.getPosition().z,
+    };
+}
+
+void RayGenerator::rotate(Vector& v) {
+    v = v * camera.getRotation();
 }

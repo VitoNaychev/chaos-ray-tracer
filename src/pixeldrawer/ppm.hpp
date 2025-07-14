@@ -5,6 +5,8 @@
 
 #include "pixeldrawer.hpp"
 
+namespace pixeldrawer {
+
 class PPMPixelDrawer : public PixelDrawer {
 public:
     PPMPixelDrawer(std::ostream& out, int width, int height);
@@ -17,5 +19,6 @@ private:
     void writeHeader(std::ostream& out, int width, int height);
 };
 
+}
 
 #endif
