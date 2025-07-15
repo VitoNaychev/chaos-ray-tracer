@@ -22,19 +22,27 @@ private:
     Vector position;
 };
 
-struct Mesh{
-    std::vector<Vector> vertices;
-    std::vector<int> triangleIndicies;
-};
 
 struct Settings {
     int width, height;
     Color background;
 };
 
+struct Light {
+    Vector position;
+    int intensity;
+};
+
+struct Mesh{
+    std::vector<Vector> vertices;
+    std::vector<int> triangleIndicies;
+};
+
 struct Scene {
     Settings settings;
     Camera camera;
+
+    std::vector<Light> lights;
     std::vector<Mesh> objects;
 };
     

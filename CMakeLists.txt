@@ -17,6 +17,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(catch2)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/linalg)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/interx)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/visualizer)

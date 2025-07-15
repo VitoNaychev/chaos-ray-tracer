@@ -1,10 +1,12 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 
 #include "types.hxx"
 #include "crtscene.hpp"
 #include "raygen.hxx"
+#include "interx.hxx"
 
 #include "pixeldrawer.hpp"
 #include "ppm.hpp"
@@ -26,6 +28,14 @@ vector<Triangle> getTriangles(vector<Mesh> objects) {
     }
 
     return triangles;
+}
+
+pixeldrawer::Color toPixelColor(Color c) {
+    return pixeldrawer::Color {
+        .r = static_cast<uint8_t>(min(1.0f, c.r) * 255),
+        .g = static_cast<uint8_t>(min(1.0f, c.g) * 255),
+        .b = static_cast<uint8_t>(min(1.0f, c.b) * 255),
+    };
 }
 
 int main(int argc, char *argv[]) {
@@ -54,22 +64,27 @@ int main(int argc, char *argv[]) {
         for (int j = 0; j < settings.width; j++) {
             auto ray = raygen.generate(j, i);
 
-            float minDistance = INFINITY;
+            Intersection closestIntersection {
+                .distance = INFINITY,
+            };
             for (auto& tri : triangles) {
-               float dist = tri.intersectionDistance(ray);
-                if (dist != -1 && dist < minDistance) {
-                    minDistance = dist;
+               Intersection i = intersect(ray, tri);
+                if (i.distance < closestIntersection.distance) {
+                    closestIntersection = i;
                 }
             }
 
-            if (minDistance != INFINITY) {
-                drawer.draw(pixeldrawer::Color{255, 255, 255});
+            if (closestIntersection.distance <=10000) {
+                Color finalColor {1, 0, 0};
+                // for (auto light : scene.lights) {
+                //     finalColor += shade(closestIntersection, light, triangles);
+                // }
+                drawer.draw(toPixelColor(finalColor));
             } else {
-                drawer.draw(pixeldrawer::Color{255, 0, 0});
+                drawer.draw(toPixelColor(settings.background));
             }
-
         }
-        
     }
+    return 0;
 }
 

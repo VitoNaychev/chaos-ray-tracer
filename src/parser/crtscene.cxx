@@ -109,6 +109,26 @@ Camera getCamera(Document& doc) {
     return Camera(position, rotation);
 }
 
+vector<Light> getLights(rapidjson::Document& doc) {
+    vector<Light> lights;
+
+    auto& lightsField = requireArray(doc, "lights");
+    for (auto& light : lightsField.GetArray()) {
+        auto& positionField = requireArray(light, "position", 3);
+
+        lights.push_back({
+            .position = Vector {
+                .x = positionField[0].GetFloat(),
+                .y = positionField[1].GetFloat(),
+                .z = positionField[2].GetFloat(),
+            },
+            .intensity = requireInt(light, "intensity")
+        });
+    }
+
+    return lights;
+}
+
 vector<Mesh> getObjects(rapidjson::Document& doc) {
     vector<Mesh> objects;
 
@@ -151,6 +171,8 @@ Scene parseCRTScene(std::istream& input) {
     return Scene{
         .settings = getSettings(doc),
         .camera = getCamera(doc),
+
+        .lights = getLights(doc),
         .objects = getObjects(doc),
     };
 }

@@ -7,6 +7,21 @@ bool operator==(const Color& c1, const Color& c2) {
     return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
 }
 
+Color operator*(const Color& c, float scalar) {
+    return Color{c.r * scalar, c.g * scalar, c.b * scalar};
+}
+
+Color operator*(float scalar, const Color& c) {
+    return Color{c.r * scalar, c.g * scalar, c.b * scalar};
+}
+
+Color& operator+=(Color& c1, const Color& c2) {
+    c1.r += c2.r;
+    c1.g += c2.g;
+    c1.b += c2.b;
+    return c1;
+}
+
 std::ostream& operator<<(std::ostream& os, const Color& c) {
     return os << "Color{r=" << c.r << ", g=" << c.g << ", b=" << c.b << "}";
 }
@@ -54,6 +69,22 @@ Vector operator-(const Vector& v1, const Vector& v2) {
     return Vector{x, y, z};
 }
 
+Vector operator+(const Vector& v1, const Vector& v2) {
+    float x = v1.x + v2.x;
+    float y = v1.y + v2.y;
+    float z = v1.z + v2.z;
+
+    return Vector{x, y, z};
+}
+
+Vector operator*(const Vector& v, float scalar) {
+    return Vector{v.x * scalar, v.y * scalar, v.z * scalar};
+}
+
+Vector operator*(float scalar, const Vector& v) {
+    return Vector{v.x * scalar, v.y * scalar, v.z * scalar};
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
     return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";
@@ -68,58 +99,22 @@ Triangle::Triangle(Vector v0, Vector v1, Vector v2) : v0 {v0}, v1 {v1}, v2 {v2} 
 }
 
 
-
-bool Triangle::intersects(Ray ray) {
-    const float err = 1e-8;
-    if (normal.dot(ray.direction) >= 0 - err) {
-        return false;
-    }
-
-    float rayDist = abs((v0 - ray.origin).dot(normal));
-    float rayProj = abs(ray.direction.dot(normal));
-
-    float t = rayDist/rayProj;
-    
-    Vector p{ray.origin.x + t * ray.direction.x, ray.origin.y + t * ray.direction.y, ray.origin.z + t * ray.direction.z};
-
-    bool leftOfE0 = leftOfEdge(p, v0, v1);
-    bool leftOfE1 = leftOfEdge(p, v1, v2);
-    bool leftOfE2 = leftOfEdge(p, v2, v0);
-
-    return leftOfE0 && leftOfE1 && leftOfE2 ;
+Vector Triangle::getNormal() const {
+    return normal;
 }
 
-float Triangle::intersectionDistance(Ray ray) {
-    const float err = 1e-8;
-    if (normal.dot(ray.direction) >= 0 - err) {
-        return -1;
-    }
-
-    float rayDist = abs((v0 - ray.origin).dot(normal));
-    float rayProj = abs(ray.direction.dot(normal));
-
-    float t = rayDist/rayProj;
-    
-    Vector p{ray.origin.x + t * ray.direction.x, ray.origin.y + t * ray.direction.y, ray.origin.z + t * ray.direction.z};
-
-    bool leftOfE0 = leftOfEdge(p, v0, v1);
-    bool leftOfE1 = leftOfEdge(p, v1, v2);
-    bool leftOfE2 = leftOfEdge(p, v2, v0);
-
-    if(leftOfE0 && leftOfE1 && leftOfE2) {
-        return t;
-    } else {
-        return -1;
-    }
+Vector Triangle::getV0() const {
+    return v0;
 }
 
-
-bool Triangle::leftOfEdge(const Vector& p, const Vector& v0, const Vector& v1) {
-    Vector e = v0 - v1;
-    Vector vp = v0 - p;
-
-    return normal.dot(e.cross(vp)) > 0;
+Vector Triangle::getV1() const {
+    return v1;
 }
+
+Vector Triangle::getV2() const {
+    return v2;
+}
+
 
 Matrix::Matrix(std::array<std::array<float, 3>, 3> m) : m {m} {}
 

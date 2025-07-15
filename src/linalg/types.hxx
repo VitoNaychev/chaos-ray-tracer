@@ -13,6 +13,10 @@ struct Color {
 
 bool operator==(const Color& c1, const Color& c2);
 
+Color operator*(const Color& c, float scalar);
+Color operator*(float scalar, const Color& c);
+Color& operator+=(Color& c1, const Color& c2);
+
 std::ostream& operator<<(std::ostream& os, const Color& c);
 
 struct Pixel {
@@ -37,6 +41,9 @@ struct Vector {
 bool operator==(const Vector& v1, const Vector& v2);
 
 Vector operator-(const Vector& v1, const Vector& v2);
+Vector operator+(const Vector& v1, const Vector& v2);
+Vector operator*(const Vector& v, float scalar);
+Vector operator*(float scalar, const Vector& v);
 
 std::ostream& operator<<(std::ostream& os, const Vector& v);
 
@@ -50,11 +57,13 @@ public:
 
     bool intersects(Ray ray);
     float intersectionDistance(Ray ray);
+    Vector getNormal() const;
+    Vector getV0() const;
+    Vector getV1() const;
+    Vector getV2() const;
 private:
    Vector v0, v1, v2;
    Vector normal;
-
-   bool leftOfEdge(const Vector& p, const Vector& v0, const Vector& v1);
 };
 
 class Matrix {
