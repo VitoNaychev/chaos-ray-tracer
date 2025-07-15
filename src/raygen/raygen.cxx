@@ -134,7 +134,7 @@ Vector RayGenerator::vectorFor(const Pixel& p) {
     return Vector {
         .x = p.x,
         .y = p.y,
-        .z = camera.getPosition().z,
+        .z = -1,
     };
 }
 

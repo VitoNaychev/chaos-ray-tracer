@@ -75,10 +75,10 @@ int main(int argc, char *argv[]) {
             }
 
             if (closestIntersection.distance <=10000) {
-                Color finalColor {1, 0, 0};
-                // for (auto light : scene.lights) {
-                //     finalColor += shade(closestIntersection, light, triangles);
-                // }
+                Color finalColor {0, 0, 0};
+                for (auto light : scene.lights) {
+                    finalColor += shade(closestIntersection, light, triangles);
+                }
                 drawer.draw(toPixelColor(finalColor));
             } else {
                 drawer.draw(toPixelColor(settings.background));

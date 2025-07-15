@@ -1,6 +1,7 @@
 #include <cmath>
 #include <numbers>
 #include <algorithm>
+#include <iostream>
 
 #include "interx.hxx"
 
@@ -18,16 +19,22 @@ bool leftOfEdge(Vector p, Vector v0, Vector v1, Vector normal) {
 Intersection intersect(Ray ray, Triangle tri) {
     Vector triNormal = tri.getNormal();
 
-    float rayProj = abs(triNormal.dot(ray.direction));
-    if (isApproxZero(rayProj)) {
+    float rayProj = triNormal.dot(ray.direction);
+    if (isApproxZero(abs(rayProj))) {
+        return Intersection{
+            .distance = INFINITY,
+        };
+    }
+
+    float rayDist = (tri.getV0() - ray.origin).dot(triNormal);
+
+    float t = rayDist/rayProj;
+    if (t <= 0) {
         return Intersection{
             .distance = INFINITY,
         };
     }
     
-    float rayDist = abs((tri.getV0() - ray.origin).dot(triNormal));
-
-    float t = rayDist/rayProj;
     Vector p = ray.origin + t * ray.direction;
 
     bool leftOfE0 = leftOfEdge(p, tri.getV0(), tri.getV1(), triNormal);
@@ -64,16 +71,16 @@ Color shade(Intersection intersection, Light light, std::vector<Triangle> triang
         return Color{0, 0, 0};
     }
 
-    // for (auto tri : triangles) {
-    //     Ray shadowRay = {
-    //         .origin = intersection.point + lightDir * 0.1,
-    //         .direction = lightDir,
-    //     };
-    //     Intersection shadowIntersection = intersect(shadowRay, tri);
-    //     if (shadowIntersection.distance < sr) {
-    //         return Color{0, 0, 0};
-    //     }
-    // }
+    for (auto tri : triangles) {
+        Ray shadowRay = {
+            .origin = intersection.point + intersection.normal * 1e-4,
+            .direction = lightDir,
+        };
+        Intersection shadowIntersection = intersect(shadowRay, tri);
+        if (shadowIntersection.distance < sr) {
+            return Color{0, 0, 0};
+        }
+    }
 
     float sphereArea = 4 * std::numbers::pi * sr * sr;
     return intersection.albedo * (light.intensity / sphereArea * cosLaw);
