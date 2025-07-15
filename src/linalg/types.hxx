@@ -53,7 +53,7 @@ struct Ray {
 
 class Triangle {
 public: 
-    Triangle(Vector v0, Vector v1, Vector v2);
+    Triangle(const Vector& v0, const Vector& v1, const Vector& v2);
 
     bool intersects(Ray ray);
     float intersectionDistance(Ray ray);
@@ -62,7 +62,7 @@ public:
     Vector getV1() const;
     Vector getV2() const;
 private:
-   Vector v0, v1, v2;
+   const Vector& v0, v1, v2;
    Vector normal;
 };
 

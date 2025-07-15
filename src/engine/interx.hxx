@@ -2,7 +2,6 @@
 #define INTERX_HXX
 
 #include "types.hxx"
-#include "scene.hxx"
 #include <vector>
 
 struct Intersection {
@@ -41,14 +40,5 @@ Intersection intersect(Ray ray, Triangle tri);
  */
 bool intersectExists(Ray ray, Triangle tri);
 
-/**
- * Calculate the shading color for an intersection point.
- * 
- * @param intersection The intersection point data
- * @param light The light source
- * @param triangles Vector of triangles for shadow testing
- * @return The computed color after shading calculations
- */
-Color shade(Intersection intersection, Light light, std::vector<Triangle> triangles);
 
 #endif // INTERX_HXX

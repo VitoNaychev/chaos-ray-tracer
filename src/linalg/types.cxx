@@ -90,7 +90,7 @@ std::ostream& operator<<(std::ostream& os, const Vector& v) {
     return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";
 }
 
-Triangle::Triangle(Vector v0, Vector v1, Vector v2) : v0 {v0}, v1 {v1}, v2 {v2} {
+Triangle::Triangle(const Vector& v0, const Vector& v1, const Vector& v2) : v0 {v0}, v1 {v1}, v2 {v2} {
     Vector v0v1 = v1 - v0;
     Vector v0v2 = v2 - v0;
 
