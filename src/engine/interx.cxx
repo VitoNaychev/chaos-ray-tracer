@@ -16,7 +16,7 @@ bool leftOfEdge(Vector p, Vector v0, Vector v1, Vector normal) {
     return normal.dot(e.cross(vp)) > 0;
 }
 
-Intersection intersect(Ray ray, Triangle tri) {
+Intersection intersect(const Ray& ray, const Triangle& tri) {
     Vector triNormal = tri.getNormal();
 
     float rayProj = triNormal.dot(ray.direction);
@@ -45,7 +45,7 @@ Intersection intersect(Ray ray, Triangle tri) {
         return Intersection{
             .point = p,
             .distance = t,
-            .normal = triNormal,
+            .triangle = &tri,
             .albedo = Color{1, 0, 0}
         };
     } else {
@@ -55,7 +55,7 @@ Intersection intersect(Ray ray, Triangle tri) {
     }
 }
 
-bool intersectExists(Ray ray, Triangle tri) {
+bool intersectExists(const Ray& ray, const Triangle& tri) {
     Intersection i = intersect(ray, tri);
     return i.distance != INFINITY;
 }

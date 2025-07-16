@@ -3,6 +3,11 @@
 
 #include "types.hxx"
 
+class Vertex : public Vector {
+public:
+    Vector normal;
+};
+
 class Camera {
 public:
     Camera(Vector position, Matrix rotation);
@@ -22,7 +27,6 @@ private:
     Vector position;
 };
 
-
 struct Settings {
     int width, height;
     Color background;
@@ -34,11 +38,20 @@ struct Light {
 };
 
 struct Mesh{
-    std::vector<Vector> vertices;
+    Mesh(std::vector<Vertex> vertices, std::vector<int> triangleIndicies);
+    
+    const std::vector<Vertex>& getVertices();
+    const std::vector<int>& getTriangleIndicies();
+
+    const std::vector<Triangle>& getTriangles();
+private:
+    std::vector<Vertex> vertices;
     std::vector<int> triangleIndicies;
+
+    std::vector<Triangle> triangles;
 };
 
-struct Scene {
+struct Scene {    
     Settings settings;
     Camera camera;
 

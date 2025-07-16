@@ -37,3 +37,37 @@ void Camera::pan(const float angle) {
 
     rotation = rotation * panMatrix;
 }
+
+
+Mesh::Mesh (vector<Vertex> vertices, vector<int> triangleIndicies): vertices {vertices}, triangleIndicies {triangleIndicies} {
+    for (size_t i = 0; i < triangleIndicies.size(); i += 3) {
+        const Vertex& v0 = this->vertices[triangleIndicies[i]];
+        const Vertex& v1 = this->vertices[triangleIndicies[i+1]];
+        const Vertex& v2 = this->vertices[triangleIndicies[i+2]];
+
+        Triangle triangle(v0, v1, v2);
+        triangles.push_back(triangle);
+    }
+    // Calculate vertex normals by averaging adjacent face normals
+    for (size_t i = 0; i < triangleIndicies.size(); i += 3) {
+        Vector faceNormal = triangles[i/3].getNormal();
+        vertices[triangleIndicies[i]].normal += faceNormal;
+        vertices[triangleIndicies[i+1]].normal += faceNormal;
+        vertices[triangleIndicies[i+2]].normal += faceNormal;
+    }
+    for (auto& vertex : vertices) {
+        vertex.normal.normalize();
+    }
+}
+
+const std::vector<Vertex>& Mesh::getVertices() {
+    return vertices;
+}
+
+const std::vector<int>& Mesh::getTriangleIndicies() {
+    return triangleIndicies;
+}
+
+const std::vector<Triangle>& Mesh::getTriangles() {
+    return triangles;
+}

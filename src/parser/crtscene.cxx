@@ -135,13 +135,15 @@ vector<Mesh> getObjects(rapidjson::Document& doc) {
     auto& objectsField = requireArray(doc, "objects");
     for (auto& object : objectsField.GetArray()) {
         auto& verticesField = requireArray(object, "vertices");
-        vector<Vector> vertices;
+        vector<Vertex> vertices;
         for (size_t i = 0; i < verticesField.Capacity(); i+=3) {
-            vertices.push_back({
-                .x = verticesField[i].GetFloat(),
-                .y = verticesField[i+1].GetFloat(),
-                .z = verticesField[i+2].GetFloat(),
-            });
+            Vertex vertex;
+            vertex.x = verticesField[i].GetFloat();
+            vertex.y = verticesField[i+1].GetFloat();
+            vertex.z = verticesField[i+2].GetFloat();
+            // Initialize normal to zero for now - can be computed later
+            vertex.normal = Vector{0, 0, 0};
+            vertices.push_back(vertex);
         }
 
         auto& triangleIndiciesField = requireArray(object, "triangles");
@@ -150,10 +152,7 @@ vector<Mesh> getObjects(rapidjson::Document& doc) {
             triangleIndicies.push_back(triangle.GetInt());
         }
 
-        objects.push_back({
-            .vertices = vertices,
-            .triangleIndicies = triangleIndicies,
-        });
+        objects.push_back(Mesh{vertices, triangleIndicies});
     }
 
     return objects;

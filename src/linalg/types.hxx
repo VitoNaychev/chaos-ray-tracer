@@ -44,6 +44,7 @@ Vector operator-(const Vector& v1, const Vector& v2);
 Vector operator+(const Vector& v1, const Vector& v2);
 Vector operator*(const Vector& v, float scalar);
 Vector operator*(float scalar, const Vector& v);
+Vector& operator+=(Vector& v1, const Vector& v2);
 
 std::ostream& operator<<(std::ostream& os, const Vector& v);
 
@@ -53,6 +54,7 @@ struct Ray {
 
 class Triangle {
 public: 
+    Triangle();
     Triangle(const Vector& v0, const Vector& v1, const Vector& v2);
 
     bool intersects(Ray ray);

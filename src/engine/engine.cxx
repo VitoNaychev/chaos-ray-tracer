@@ -13,22 +13,8 @@ pixeldrawer::Color toPixelColor(Color c) {
 }
 
 Engine::Engine(Scene scene, pixeldrawer::PixelDrawer& drawer) 
-    : scene{scene}, drawer{drawer}, raygen{scene.settings.width, scene.settings.height, scene.camera} {
-    initTriangles(this->scene.objects);
-}
+    : scene{scene}, drawer{drawer}, raygen{scene.settings.width, scene.settings.height, scene.camera} {}
 
-void Engine::initTriangles(const std::vector<Mesh>& objects) {
-    for (auto& object: objects) {
-        for (size_t i = 0; i < object.triangleIndicies.size(); i += 3) {
-            const Vector& v0 = object.vertices[object.triangleIndicies[i]];
-            const Vector& v1 = object.vertices[object.triangleIndicies[i+1]];
-            const Vector& v2 = object.vertices[object.triangleIndicies[i+2]];
-
-            Triangle triangle(v0, v1, v2);
-            triangles.push_back(triangle);
-        }
-    }
-}
 
 void Engine::render() {
     Settings& settings = scene.settings;
@@ -40,18 +26,28 @@ void Engine::render() {
             Intersection closestIntersection {
                 .distance = INFINITY,
             };
-            for (auto& tri : triangles) {
-               Intersection i = intersect(ray, tri);
-                if (i.distance < closestIntersection.distance) {
-                    closestIntersection = i;
+            for (auto& object : scene.objects) {
+                for (auto& tri : object.getTriangles()) {
+                    Intersection i = intersect(ray, tri);
+                    if (i.distance < closestIntersection.distance) {
+                        closestIntersection = i;
+                    }
                 }
             }
-
             if (closestIntersection.distance != INFINITY) {
-                Color finalColor {0, 0, 0};
-                for (auto light : scene.lights) {
-                    finalColor += shade(closestIntersection, light, triangles);
-                }
+                const Triangle& tri = *closestIntersection.triangle;
+
+                Vector v0p = closestIntersection.point - tri.getV0();
+                Vector v0v1 = tri.getV1() - tri.getV0();
+                Vector v0v2 = tri.getV2() - tri.getV0();
+
+                float u = v0v1.cross(v0p).length() / v0v1.cross(v0v2).length();
+                float v = v0v2.cross(v0p).length() / v0v1.cross(v0v2).length();
+
+                Color finalColor {u, v, 0};
+                // for (auto light : scene.lights) {
+                //     finalColor += shade(closestIntersection, light, scene.objects);
+                // }
                 drawer.draw(toPixelColor(finalColor));
             } else {
                 drawer.draw(toPixelColor(settings.background));

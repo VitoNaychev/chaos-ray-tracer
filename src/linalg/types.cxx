@@ -85,6 +85,13 @@ Vector operator*(float scalar, const Vector& v) {
     return Vector{v.x * scalar, v.y * scalar, v.z * scalar};
 }
 
+Vector& operator+=(Vector& v1, const Vector& v2) {
+    v1.x += v2.x;
+    v1.y += v2.y;
+    v1.z += v2.z;
+    return v1;
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
     return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";

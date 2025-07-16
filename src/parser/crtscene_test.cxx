@@ -25,11 +25,11 @@ TEST_CASE("Parses CRTScene file") {
     };
     Vector position {0, 0, 0};
     Matrix rotation = Matrix::identity();
-    vector<Vector> vertices = {
-        {-1.75, -1.75, -3},
-        {1.75, -1.75, -3},
-        {0, 1.75, -3}
-    };
+    vector<Vertex> vertices;
+    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
 
 
@@ -75,8 +75,8 @@ TEST_CASE("Parses CRTScene file") {
     REQUIRE(scene.camera.getPosition() == position);
     REQUIRE(scene.camera.getRotation() == rotation);
 
-    REQUIRE(scene.objects[0].vertices == vertices);
-    REQUIRE(scene.objects[0].triangleIndicies == triangleIndicies);
+    REQUIRE(scene.objects[0].getVertices() == vertices);
+    REQUIRE(scene.objects[0].getTriangleIndicies() == triangleIndicies);
 }
 
 TEST_CASE("Throws exception on invalid JSON") {
@@ -664,11 +664,11 @@ TEST_CASE("Throws exception on \"position\" does not contain exactly 3 elements"
 }
 
 TEST_CASE("Parses objects") {
-    vector<Vector> vertices = {
-        {-1.75, -1.75, -3},
-        {1.75, -1.75, -3},
-        {0, 1.75, -3}
-    };
+    vector<Vertex> vertices;
+    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
     stringstream input;
     input << "\
@@ -694,17 +694,17 @@ TEST_CASE("Parses objects") {
 
     auto objects = getObjects(doc);
 
-    REQUIRE(objects[0].vertices == vertices);
-    REQUIRE(objects[0].triangleIndicies == triangleIndicies);
+    REQUIRE(objects[0].getVertices() == vertices);
+    REQUIRE(objects[0].getTriangleIndicies() == triangleIndicies);
 }
 
 
 TEST_CASE("Example objects test case") {
-    vector<Vector> vertices = {
-        {-1.75, -1.75, -3},
-        {1.75, -1.75, -3},
-        {0, 1.75, -3}
-    };
+    vector<Vertex> vertices;
+    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
     stringstream input;
     input << "\
