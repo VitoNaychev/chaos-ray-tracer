@@ -3,8 +3,9 @@
 
 #include "types.hxx"
 
-class Vertex : public Vector {
-public:
+struct Vertex : public Vector {
+    using Vector::Vector;
+    
     Vector normal;
 };
 
@@ -37,16 +38,29 @@ struct Light {
     int intensity;
 };
 
+enum MaterialType {
+    Diffuse,
+    Reflective,
+};
+
+struct Material {
+    MaterialType type;
+    Color albedo;
+    bool smooth; 
+};
+
 struct Mesh{
-    Mesh(std::vector<Vertex> vertices, std::vector<int> triangleIndicies);
-    
+    Mesh(std::vector<Vertex> vertices, std::vector<int> triangleIndicies, int materialIndex);
+
     const std::vector<Vertex>& getVertices();
     const std::vector<int>& getTriangleIndicies();
+    const int getMaterialIndex();
 
-    const std::vector<Triangle>& getTriangles();
+    const std::vector<Triangle>& getTriangles() const;
 private:
     std::vector<Vertex> vertices;
     std::vector<int> triangleIndicies;
+    int materialIndex;
 
     std::vector<Triangle> triangles;
 };
@@ -56,6 +70,7 @@ struct Scene {
     Camera camera;
 
     std::vector<Light> lights;
+    std::vector<Material> materials;
     std::vector<Mesh> objects;
 };
     

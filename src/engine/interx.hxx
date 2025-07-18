@@ -7,9 +7,7 @@
 struct Intersection {
     Vector point;
     float distance;
-
     Triangle const* triangle;
-    Color albedo;
 };
 
 /**

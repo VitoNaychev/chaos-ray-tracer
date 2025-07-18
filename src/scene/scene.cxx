@@ -1,5 +1,4 @@
 #include <cmath>
-
 #include "scene.hxx"
 #include "types.hxx"
 
@@ -39,7 +38,8 @@ void Camera::pan(const float angle) {
 }
 
 
-Mesh::Mesh (vector<Vertex> vertices, vector<int> triangleIndicies): vertices {vertices}, triangleIndicies {triangleIndicies} {
+Mesh::Mesh(vector<Vertex> vertices, vector<int> triangleIndicies, int materialIndex): 
+    vertices {vertices}, triangleIndicies {triangleIndicies}, materialIndex {materialIndex} {
     for (size_t i = 0; i < triangleIndicies.size(); i += 3) {
         const Vertex& v0 = this->vertices[triangleIndicies[i]];
         const Vertex& v1 = this->vertices[triangleIndicies[i+1]];
@@ -48,14 +48,14 @@ Mesh::Mesh (vector<Vertex> vertices, vector<int> triangleIndicies): vertices {ve
         Triangle triangle(v0, v1, v2);
         triangles.push_back(triangle);
     }
-    // Calculate vertex normals by averaging adjacent face normals
+
     for (size_t i = 0; i < triangleIndicies.size(); i += 3) {
         Vector faceNormal = triangles[i/3].getNormal();
-        vertices[triangleIndicies[i]].normal += faceNormal;
-        vertices[triangleIndicies[i+1]].normal += faceNormal;
-        vertices[triangleIndicies[i+2]].normal += faceNormal;
+        this->vertices[triangleIndicies[i]].normal += faceNormal;
+        this->vertices[triangleIndicies[i+1]].normal += faceNormal;
+        this->vertices[triangleIndicies[i+2]].normal += faceNormal;
     }
-    for (auto& vertex : vertices) {
+    for (auto& vertex : this->vertices) {
         vertex.normal.normalize();
     }
 }
@@ -68,6 +68,10 @@ const std::vector<int>& Mesh::getTriangleIndicies() {
     return triangleIndicies;
 }
 
-const std::vector<Triangle>& Mesh::getTriangles() {
+const int Mesh::getMaterialIndex() {
+    return materialIndex;
+}
+
+const std::vector<Triangle>& Mesh::getTriangles() const {
     return triangles;
 }

@@ -22,36 +22,49 @@ void Engine::render() {
     for (int i = 0; i < settings.height; i++) {
         for (int j = 0; j < settings.width; j++) {
             auto ray = raygen.generate(j, i);
+            drawer.draw(toPixelColor(traceRay(ray)));
+        }
+    }
+}
 
-            Intersection closestIntersection {
-                .distance = INFINITY,
-            };
-            for (auto& object : scene.objects) {
-                for (auto& tri : object.getTriangles()) {
-                    Intersection i = intersect(ray, tri);
-                    if (i.distance < closestIntersection.distance) {
-                        closestIntersection = i;
-                    }
-                }
-            }
-            if (closestIntersection.distance != INFINITY) {
-                const Triangle& tri = *closestIntersection.triangle;
+Color Engine::traceRay(const Ray& ray, int depth) {
+    const std::vector<Mesh>& objects = scene.objects;
 
-                Vector v0p = closestIntersection.point - tri.getV0();
-                Vector v0v1 = tri.getV1() - tri.getV0();
-                Vector v0v2 = tri.getV2() - tri.getV0();
-
-                float u = v0v1.cross(v0p).length() / v0v1.cross(v0v2).length();
-                float v = v0v2.cross(v0p).length() / v0v1.cross(v0v2).length();
-
-                Color finalColor {u, v, 0};
-                // for (auto light : scene.lights) {
-                //     finalColor += shade(closestIntersection, light, scene.objects);
-                // }
-                drawer.draw(toPixelColor(finalColor));
-            } else {
-                drawer.draw(toPixelColor(settings.background));
+    Intersection closestIntersection {
+        .distance = INFINITY,
+    };
+    Material objectMaterial;
+    for (auto& object : scene.objects) {
+        for (auto& tri : object.getTriangles()) {
+            Intersection i = intersect(ray, tri);
+            if (i.distance < closestIntersection.distance) {
+                closestIntersection = i;
+                objectMaterial = scene.materials[object.getMaterialIndex()];
             }
         }
     }
+
+    if (closestIntersection.distance == INFINITY) {
+        return scene.settings.background;
+    }
+
+    if (objectMaterial.type == MaterialType::Diffuse) {
+        Color finalColor {0, 0, 0};
+        for (auto light : scene.lights) {
+            finalColor += shade(closestIntersection, objectMaterial, light, scene.objects);
+        }
+        return finalColor;
+    } else if (objectMaterial.type == MaterialType::Reflective) {
+        if (depth == 5) {
+            return scene.settings.background;
+        }
+        
+        const Vector& hitNormal = closestIntersection.triangle->getNormal();
+        Ray reflectedRay {
+            .origin = closestIntersection.point,
+            .direction = ray.direction - 2 * ray.direction.dot(hitNormal) * hitNormal, 
+        };
+        return objectMaterial.albedo * traceRay(reflectedRay, depth + 1);
+    } 
+    return Color{0, 0, 1};
 }

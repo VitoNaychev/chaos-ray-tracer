@@ -46,7 +46,6 @@ Intersection intersect(const Ray& ray, const Triangle& tri) {
             .point = p,
             .distance = t,
             .triangle = &tri,
-            .albedo = Color{1, 0, 0}
         };
     } else {
         return Intersection{

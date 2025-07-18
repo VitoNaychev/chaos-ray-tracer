@@ -56,6 +56,28 @@ int requireInt(Value& doc, const char* name) {
     return doc[name].GetInt();
 }
 
+bool requireBool(Value& doc, const char* name) {
+    if (!doc.HasMember(name)) {
+        throw runtime_error(format("missing {} key", name));
+    }
+    if (!doc[name].IsBool()) {
+        throw runtime_error(format("{} is not a bool", name));
+    }
+
+    return doc[name].GetBool();
+}
+
+string requireString(Value& doc, const char* name) {
+    if (!doc.HasMember(name)) {
+        throw runtime_error(format("missing {} key", name));
+    }
+    if (!doc[name].IsString()) {
+        throw runtime_error(format("{} is not a string", name));
+    }
+
+    return doc[name].GetString();
+}
+
 Settings getSettings(Document& doc) {
      auto& settings = requireObject(doc, "settings");
 
@@ -100,11 +122,11 @@ Camera getCamera(Document& doc) {
     Matrix rotation(matrixArr);
 
     auto& positionField = requireArray(camera, "position", 3);
-    Vector position {
-        .x = positionField[0].GetFloat(),
-        .y = positionField[1].GetFloat(),
-        .z = positionField[2].GetFloat(),
-    };
+    Vector position(
+        positionField[0].GetFloat(),
+        positionField[1].GetFloat(),
+        positionField[2].GetFloat()
+    );
     
     return Camera(position, rotation);
 }
@@ -117,11 +139,11 @@ vector<Light> getLights(rapidjson::Document& doc) {
         auto& positionField = requireArray(light, "position", 3);
 
         lights.push_back({
-            .position = Vector {
-                .x = positionField[0].GetFloat(),
-                .y = positionField[1].GetFloat(),
-                .z = positionField[2].GetFloat(),
-            },
+            .position = Vector(
+                positionField[0].GetFloat(),
+                positionField[1].GetFloat(),
+                positionField[2].GetFloat()
+            ),
             .intensity = requireInt(light, "intensity")
         });
     }
@@ -129,30 +151,59 @@ vector<Light> getLights(rapidjson::Document& doc) {
     return lights;
 }
 
+MaterialType getMaterialType(string materialString) {
+    if (materialString == "diffuse") {
+        return MaterialType::Diffuse;
+    } else if (materialString == "reflective") {
+        return MaterialType::Reflective;
+    } else {
+        throw runtime_error("unkown material type");
+    }
+}
+
+Color getMaterialAlbedo(rapidjson::Value& albedoField) {
+    return Color {
+        .r = albedoField[0].GetFloat(),
+        .g = albedoField[1].GetFloat(),
+        .b = albedoField[2].GetFloat(),
+    };
+}
+
+vector<Material> getMaterials(rapidjson::Document& doc) {
+    vector<Material> materials;
+
+    auto& materialsField = requireArray(doc, "materials");
+    for (auto& materialField : materialsField.GetArray()) {
+        materials.push_back({
+            .type = getMaterialType(requireString(materialField, "type")),
+            .albedo = getMaterialAlbedo(requireArray(materialField, "albedo", 3)),
+            .smooth = requireBool(materialField, "smooth_shading"),
+        });
+    }
+
+    return materials;
+}
+
 vector<Mesh> getObjects(rapidjson::Document& doc) {
     vector<Mesh> objects;
 
     auto& objectsField = requireArray(doc, "objects");
     for (auto& object : objectsField.GetArray()) {
-        auto& verticesField = requireArray(object, "vertices");
         vector<Vertex> vertices;
+        vector<int> triangleIndicies;
+
+        auto& verticesField = requireArray(object, "vertices");
         for (size_t i = 0; i < verticesField.Capacity(); i+=3) {
-            Vertex vertex;
-            vertex.x = verticesField[i].GetFloat();
-            vertex.y = verticesField[i+1].GetFloat();
-            vertex.z = verticesField[i+2].GetFloat();
-            // Initialize normal to zero for now - can be computed later
-            vertex.normal = Vector{0, 0, 0};
+            Vertex vertex {verticesField[i].GetFloat(), verticesField[i+1].GetFloat(), verticesField[i+2].GetFloat()};
             vertices.push_back(vertex);
         }
 
         auto& triangleIndiciesField = requireArray(object, "triangles");
-        vector<int> triangleIndicies;
         for (auto& triangle : triangleIndiciesField.GetArray()) {
             triangleIndicies.push_back(triangle.GetInt());
         }
-
-        objects.push_back(Mesh{vertices, triangleIndicies});
+        
+        objects.push_back(Mesh{vertices, triangleIndicies, requireInt(object, "material_index")});
     }
 
     return objects;
@@ -172,6 +223,7 @@ Scene parseCRTScene(std::istream& input) {
         .camera = getCamera(doc),
 
         .lights = getLights(doc),
+        .materials = getMaterials(doc),
         .objects = getObjects(doc),
     };
 }

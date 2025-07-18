@@ -12,9 +12,9 @@ TEST_CASE("Returns false when ray is parallel with triangle normal") {
     };
 
     // Triangle parallel to X plane
-    Vector v0 {-2, 2, 2}; 
-    Vector v1 {2, 2, 2};
-    Vector v2 {2, 2, 4};
+    Vector v0(-2, 2, 2); 
+    Vector v1(2, 2, 2);
+    Vector v2(2, 2, 4);
     Triangle tri(v0, v1, v2);
 
     bool doesIntersect = intersectExists(ray, tri);
@@ -28,9 +28,9 @@ TEST_CASE("Returns false when ray is really close to being parallel to triangle 
     };
 
     // Triangle parallel to X plane
-    Vector v0 {-2, 2, -2}; 
-    Vector v1 {2, 2, -2};
-    Vector v2 {2, 2 + 1e-10, -4};
+    Vector v0(-2, 2, -2); 
+    Vector v1(2, 2, -2);
+    Vector v2(2, 2 + 1e-10, -4);
     Triangle tri(v0, v1, v2);
 
     bool doesIntersect = intersectExists(ray, tri);
@@ -43,9 +43,9 @@ TEST_CASE("Returns false in case of back-face culling") {
         .direction = {0, 0, -1}
     };
 
-    Vector v0 {-1.75, -1.75, -3};
-    Vector v1 {1.75, -1.75, -3};
-    Vector v2 {0, 1.75, -3};
+    Vector v0(-1.75, -1.75, -3);
+    Vector v1(1.75, -1.75, -3);
+    Vector v2(0, 1.75, -3);
     Triangle tri(v2, v1, v0);
 
     bool doesIntersect = intersectExists(ray, tri);
@@ -58,9 +58,9 @@ TEST_CASE("Returns true when ray intersects with triangle") {
         .direction = {0, 0, -1}
     };
 
-    Vector v0 {-1.75, -1.75, -3};
-    Vector v1 {1.75, -1.75, -3};
-    Vector v2 {0, 1.75, -3};
+    Vector v0(-1.75, -1.75, -3);
+    Vector v1(1.75, -1.75, -3);
+    Vector v2(0, 1.75, -3);
     Triangle tri(v0, v1, v2);
 
     bool doesIntersect = intersectExists(ray, tri);
@@ -73,9 +73,9 @@ TEST_CASE("Returns false when ray doesn't intersect with triangle") {
        .direction = {0, 0, 1}
     };
 
-    Vector v0 {-2, 2, 2};
-    Vector v1 {2, 2, 2};
-    Vector v2 {2, 4, 2};
+    Vector v0(-2, 2, 2);
+    Vector v1(2, 2, 2);
+    Vector v2(2, 4, 2);
     Triangle tri(v0, v1, v2);
 
     bool doesIntersect = intersectExists(ray, tri);

@@ -15,6 +15,10 @@ Color operator*(float scalar, const Color& c) {
     return Color{c.r * scalar, c.g * scalar, c.b * scalar};
 }
 
+Color operator*(const Color& c1, const Color& c2) {
+    return Color{c1.r * c2.r, c1.g * c2.g, c1.b * c2.b};
+}
+
 Color& operator+=(Color& c1, const Color& c2) {
     c1.r += c2.r;
     c1.g += c2.g;
@@ -46,14 +50,14 @@ void Vector::normalize() {
 }
 
 Vector Vector::cross(const Vector& rhs) {
-    return Vector {
+    return Vector(
         y * rhs.z - z * rhs.y,
         z * rhs.x - x * rhs.z,
-        x * rhs.y - y * rhs.x,
-    };
+        x * rhs.y - y * rhs.x
+    );
 }
 
-float Vector::dot(const Vector& rhs) {
+float Vector::dot(const Vector& rhs) const {
     return (x * rhs.x) + (y * rhs.y) + (z * rhs.z); 
 }
 
@@ -66,7 +70,7 @@ Vector operator-(const Vector& v1, const Vector& v2) {
     float y = v1.y - v2.y;
     float z = v1.z - v2.z;
 
-    return Vector{x, y, z};
+    return Vector(x, y, z);
 }
 
 Vector operator+(const Vector& v1, const Vector& v2) {
@@ -74,15 +78,15 @@ Vector operator+(const Vector& v1, const Vector& v2) {
     float y = v1.y + v2.y;
     float z = v1.z + v2.z;
 
-    return Vector{x, y, z};
+    return Vector(x, y, z);
 }
 
 Vector operator*(const Vector& v, float scalar) {
-    return Vector{v.x * scalar, v.y * scalar, v.z * scalar};
+    return Vector(v.x * scalar, v.y * scalar, v.z * scalar);
 }
 
 Vector operator*(float scalar, const Vector& v) {
-    return Vector{v.x * scalar, v.y * scalar, v.z * scalar};
+    return Vector(v.x * scalar, v.y * scalar, v.z * scalar);
 }
 
 Vector& operator+=(Vector& v1, const Vector& v2) {
@@ -91,7 +95,6 @@ Vector& operator+=(Vector& v1, const Vector& v2) {
     v1.z += v2.z;
     return v1;
 }
-
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
     return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";
@@ -106,22 +109,21 @@ Triangle::Triangle(const Vector& v0, const Vector& v1, const Vector& v2) : v0 {v
 }
 
 
-Vector Triangle::getNormal() const {
+const Vector& Triangle::getNormal() const {
     return normal;
 }
 
-Vector Triangle::getV0() const {
+const Vector& Triangle::getV0() const {
     return v0;
 }
 
-Vector Triangle::getV1() const {
+const Vector& Triangle::getV1() const {
     return v1;
 }
 
-Vector Triangle::getV2() const {
+const Vector& Triangle::getV2() const {
     return v2;
 }
-
 
 Matrix::Matrix(std::array<std::array<float, 3>, 3> m) : m {m} {}
 
@@ -154,11 +156,11 @@ Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
 }
 
 Vector operator*(const Vector& lhs, const Matrix& rhs) {
-    return Vector{
-        .x = lhs.x * rhs.m[0][0] + lhs.y * rhs.m[1][0] + lhs.z * rhs.m[2][0],
-        .y = lhs.x * rhs.m[0][1] + lhs.y * rhs.m[1][1] + lhs.z * rhs.m[2][1],
-        .z = lhs.x * rhs.m[0][2] + lhs.y * rhs.m[1][2] + lhs.z * rhs.m[2][2],
-    };
+    return Vector(
+        lhs.x * rhs.m[0][0] + lhs.y * rhs.m[1][0] + lhs.z * rhs.m[2][0],
+        lhs.x * rhs.m[0][1] + lhs.y * rhs.m[1][1] + lhs.z * rhs.m[2][1],
+        lhs.x * rhs.m[0][2] + lhs.y * rhs.m[1][2] + lhs.z * rhs.m[2][2]
+    );
 }
 
 bool operator==(const Matrix& lhs, const Matrix& rhs) {

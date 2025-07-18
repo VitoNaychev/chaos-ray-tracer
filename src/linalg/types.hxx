@@ -15,6 +15,7 @@ bool operator==(const Color& c1, const Color& c2);
 
 Color operator*(const Color& c, float scalar);
 Color operator*(float scalar, const Color& c);
+Color operator*(const Color& c1, const Color& c2);
 Color& operator+=(Color& c1, const Color& c2);
 
 std::ostream& operator<<(std::ostream& os, const Color& c);
@@ -29,11 +30,15 @@ bool operator==(const Pixel& p1, const Pixel& p2);
 std::ostream& operator<<(std::ostream& os, const Pixel& p);
 
 struct Vector {
+    Vector() = default;
+    Vector(float x, float y, float z) : x(x), y(y), z(z) {}
+    virtual ~Vector() = default;
+    
     float length();
     void normalize();
 
     Vector cross(const Vector& rhs);
-    float dot(const Vector& rhs);
+    float dot(const Vector& rhs) const;
 
     float x, y, z;
 };
@@ -59,12 +64,12 @@ public:
 
     bool intersects(Ray ray);
     float intersectionDistance(Ray ray);
-    Vector getNormal() const;
-    Vector getV0() const;
-    Vector getV1() const;
-    Vector getV2() const;
+    const Vector& getNormal() const;
+    const Vector&  getV0() const;
+    const Vector&  getV1() const;
+    const Vector&  getV2() const;
 private:
-   const Vector& v0, v1, v2;
+   const Vector& v0,& v1,& v2;
    Vector normal;
 };
 

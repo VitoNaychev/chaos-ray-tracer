@@ -7,6 +7,6 @@
 #include "types.hxx"
 #include "scene.hxx"
 
-Color shade(Intersection intersection, Light light, std::vector<Mesh>& objects);
+Color shade(const Intersection& intersection, const Material& material, const Light& light, const std::vector<Mesh>& objects);
 
 #endif // SHADE_HXX

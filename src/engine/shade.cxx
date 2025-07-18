@@ -2,14 +2,41 @@
 #include "shade.hxx"
 #include "interx.hxx"
 #include <numbers>
+#include <iostream>
+#include <typeinfo>
 
-Color shade(Intersection intersection, Light light, std::vector<Mesh>& objects) {
+
+Vector calculateSmoothHitNormal(const Intersection& intersection) {
+    const Triangle& tri = *intersection.triangle;
+
+    Vector v0p = intersection.point - tri.getV0();
+    Vector v0v1 = tri.getV1() - tri.getV0();
+    Vector v0v2 = tri.getV2() - tri.getV0();
+
+    float u = v0v1.cross(v0p).length() / v0v1.cross(v0v2).length();
+    float v = v0v2.cross(v0p).length() / v0v1.cross(v0v2).length();
+
+    const Vertex& v0N = dynamic_cast<const Vertex&>(tri.getV0());
+    const Vertex& v1N = dynamic_cast<const Vertex&>(tri.getV1());
+    const Vertex& v2N = dynamic_cast<const Vertex&>(tri.getV2());
+
+    Vector averagedNormal =  v * v1N.normal + u * v2N.normal + (1 - u - v) * v0N.normal;
+    averagedNormal.normalize();
+
+    return averagedNormal;
+}
+
+Color shade(const Intersection& intersection, const Material& material, const Light& light, const std::vector<Mesh>& objects) {
     Vector lightDir = light.position - intersection.point;
+    float sphereRadius = lightDir.length();
 
-    float sr = lightDir.length();
+    Vector hitNormal = intersection.triangle->getNormal();
+    if (material.smooth) {
+        hitNormal = calculateSmoothHitNormal(intersection);
+    }  
 
     lightDir.normalize();
-    float cosLaw = lightDir.dot(intersection.triangle->getNormal());
+    float cosLaw = lightDir.dot(hitNormal);
     if (cosLaw <= 0) {
         return Color{0, 0, 0};
     }
@@ -17,16 +44,16 @@ Color shade(Intersection intersection, Light light, std::vector<Mesh>& objects) 
     for (auto& object : objects) {
         for (auto& tri : object.getTriangles()) {
             Ray shadowRay = {
-                .origin = intersection.point + intersection.triangle->getNormal() * 1e-4,
+                .origin = intersection.point + hitNormal * 1e-2,
                 .direction = lightDir,
             };
             Intersection shadowIntersection = intersect(shadowRay, tri);
-            if (shadowIntersection.distance < sr) {
+            if (shadowIntersection.distance < sphereRadius) {
                 return Color{0, 0, 0};
             }
         }
     }
 
-    float sphereArea = 4 * std::numbers::pi * sr * sr;
-    return intersection.albedo * (light.intensity / sphereArea * cosLaw);
+    float sphereArea = 4 * std::numbers::pi * sphereRadius * sphereRadius;
+    return material.albedo * (light.intensity / sphereArea * cosLaw);
 }

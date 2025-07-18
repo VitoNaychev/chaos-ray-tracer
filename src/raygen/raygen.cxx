@@ -48,11 +48,7 @@ void adjustAspectRatio(std::vector<Pixel>& pixels, int width, int height) {
 std::vector<Vector> getVectors(std::vector<Pixel>& pixels) {
     std::vector<Vector> vectors;
     for (auto& p : pixels) {
-        Vector v = Vector {
-            .x = p.x,
-            .y = p.y,
-            .z = -1,
-        };
+        Vector v = Vector(p.x, p.y, -1);
         vectors.push_back(v);
     }
     return vectors;
@@ -131,11 +127,7 @@ void RayGenerator::adjustAspectRatio(Pixel& p) {
 }
 
 Vector RayGenerator::vectorFor(const Pixel& p) {
-    return Vector {
-        .x = p.x,
-        .y = p.y,
-        .z = -1,
-    };
+    return Vector(p.x, p.y, -1);
 }
 
 void RayGenerator::rotate(Vector& v) {

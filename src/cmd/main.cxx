@@ -1,13 +1,14 @@
 #include <iostream>
 #include <fstream>
-#include <cmath>
-#include <algorithm>
+
+#include <chrono>
 
 #include "ppm.hpp"
 #include "crtscene.hpp"
 #include "engine.hxx"
 
 using namespace std;
+using namespace std::chrono;
 
 
 int main(int argc, char *argv[]) {

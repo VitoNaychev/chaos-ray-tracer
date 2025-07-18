@@ -23,7 +23,7 @@ TEST_CASE("Parses CRTScene file") {
             .b = 0,
         }
     };
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
     vector<Vertex> vertices;
     Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
@@ -407,7 +407,7 @@ TEST_CASE("Throws exception on color not in the range [0-1]") {
 
 // Camera parsing tests
 TEST_CASE("Parser camera position and rotation") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -441,7 +441,7 @@ TEST_CASE("Parser camera position and rotation") {
 }
 
 TEST_CASE("Throws exception on missing \"camera\" key") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -470,7 +470,7 @@ TEST_CASE("Throws exception on missing \"camera\" key") {
 }
 
 TEST_CASE("Throws exception if \"camera\" is not an object") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -490,7 +490,7 @@ TEST_CASE("Throws exception if \"camera\" is not an object") {
 
 
 TEST_CASE("Throws exception on missing \"matrix\" key") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -516,7 +516,7 @@ TEST_CASE("Throws exception on missing \"matrix\" key") {
 }
 
 TEST_CASE("Throws exception on \"matrix\" not an array") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -544,7 +544,7 @@ TEST_CASE("Throws exception on \"matrix\" not an array") {
 }
 
 TEST_CASE("Throws exception on \"matrix\" does not contain exactly 9 elements") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -576,7 +576,7 @@ TEST_CASE("Throws exception on \"matrix\" does not contain exactly 9 elements") 
 }
 
 TEST_CASE("Throws exception on missing \"position\" key") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -604,7 +604,7 @@ TEST_CASE("Throws exception on missing \"position\" key") {
 }
 
 TEST_CASE("Throws exception on \"position\" not an array") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;
@@ -633,7 +633,7 @@ TEST_CASE("Throws exception on \"position\" not an array") {
 }
 
 TEST_CASE("Throws exception on \"position\" does not contain exactly 3 elements") {
-    Vector position {0, 0, 0};
+    Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
 
     stringstream input;

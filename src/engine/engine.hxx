@@ -20,7 +20,7 @@ private:
     std::vector<Triangle> triangles;
     RayGenerator raygen;
     
-    void initTriangles(const std::vector<Mesh>& objects);
+    Color traceRay(const Ray& ray, int depth = 0);
 };
 
 #endif // ENGINE_HXX

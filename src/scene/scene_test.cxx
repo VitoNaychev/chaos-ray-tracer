@@ -7,9 +7,9 @@
 #include "types.hxx"
 
 TEST_CASE("Dollies camera forward") {
-    Vector want {.z = -5};
+    Vector want(0, 0, -5);
 
-    Vector position {.z = 0};
+    Vector position(0, 0, 0);
     Matrix rotation;
 
     Camera cam(position, rotation);
@@ -19,9 +19,9 @@ TEST_CASE("Dollies camera forward") {
 }
 
 TEST_CASE("Jibs camera upward") {
-    Vector want {.y = 10};
+    Vector want(0, 10, 0);
 
-    Vector position {.y = 0};
+    Vector position(0, 0, 0);
     Matrix rotation;
 
     Camera cam(position, rotation);
@@ -31,9 +31,9 @@ TEST_CASE("Jibs camera upward") {
 }
 
 TEST_CASE("Trucks camera to the right") {
-    Vector want {.x = 7};
+    Vector want(7, 0, 0);
 
-    Vector position {.x = 0};
+    Vector position(0, 0, 0);
     Matrix rotation;
 
     Camera cam(position, rotation);
@@ -52,7 +52,7 @@ TEST_CASE("Pans camera +30 degrees") {
     Matrix want {rotatedMatrix};
     
 
-    Vector position {.x = 0};
+    Vector position(0, 0, 0);
     std::array<std::array<float, 3>, 3> initialMatrix = {{
         {{1.0f, 0.0f, 0.0f}},
         {{0.0f, 1.0f, 0.0f}},

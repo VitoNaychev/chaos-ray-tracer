@@ -183,26 +183,10 @@ TEST_CASE("Get camera view") {
 
 TEST_CASE("Get vectors") {
     std::vector<Vector> want = {
-        Vector{
-            .x = -0.5,
-            .y = 0.5,
-            .z = -1,
-        }, 
-        Vector{
-            .x = -0.5,
-            .y = -0.5,
-            .z = -1,
-        }, 
-        Vector{
-            .x = 0.5,
-            .y = 0.5,
-            .z = -1,
-        },
-        Vector{
-            .x = 0.5,
-            .y = -0.5,
-            .z = -1,
-        }
+        Vector(-0.5, 0.5, -1), 
+        Vector(-0.5, -0.5, -1), 
+        Vector(0.5, 0.5, -1),
+        Vector(0.5, -0.5, -1)
     };
 
     std::vector<Pixel> pixels = {
@@ -233,39 +217,15 @@ TEST_CASE("Get vectors") {
 TEST_CASE("Normalize vectors") {
     double angle = std::numbers::pi/4/3;
     std::vector<Vector> want = {
-        Vector{
-            .x = float(std::sin(angle)),
-            .y = float(std::cos(angle)),
-            .z = 0,
-        }, 
-        Vector{
-            .x = float(std::sin(angle)),
-            .y = 0,
-            .z = float(std::cos(angle)),
-        }, 
-        Vector{
-            .x = 0,
-            .y = float(std::sin(angle)),
-            .z = float(std::cos(angle)),
-        },
+        Vector(float(std::sin(angle)), float(std::cos(angle)), 0), 
+        Vector(float(std::sin(angle)), 0, float(std::cos(angle))), 
+        Vector(0, float(std::sin(angle)), float(std::cos(angle))),
     };
 
     std::vector<Vector> vectors = {
-        Vector{
-            .x = float(5*std::sin(angle)),
-            .y = float(5*std::cos(angle)),
-            .z = 0,
-        }, 
-        Vector{
-            .x = float(3*std::sin(angle)),
-            .y = 0,
-            .z = float(3*std::cos(angle)),
-        }, 
-        Vector{
-            .x = 0,
-            .y = float(10*std::sin(angle)),
-            .z = float(10*std::cos(angle)),
-        },
+        Vector(float(5*std::sin(angle)), float(5*std::cos(angle)), 0), 
+        Vector(float(3*std::sin(angle)), 0, float(3*std::cos(angle))), 
+        Vector(0, float(10*std::sin(angle)), float(10*std::cos(angle))),
     };
 
     normalizeVectors(vectors);
