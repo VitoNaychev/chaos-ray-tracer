@@ -60,16 +60,12 @@ struct Ray {
 class Triangle {
 public: 
     Triangle();
-    Triangle(const Vector& v0, const Vector& v1, const Vector& v2);
+    Triangle(std::initializer_list<Vector*> v);
 
-    bool intersects(Ray ray);
-    float intersectionDistance(Ray ray);
+    const Vector& operator[](size_t index) const;
     const Vector& getNormal() const;
-    const Vector&  getV0() const;
-    const Vector&  getV1() const;
-    const Vector&  getV2() const;
 private:
-   const Vector& v0,& v1,& v2;
+   const Vector* vertices[3];
    Vector normal;
 };
 

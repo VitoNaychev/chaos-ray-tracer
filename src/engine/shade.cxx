@@ -9,16 +9,16 @@
 Vector calculateSmoothHitNormal(const Intersection& intersection) {
     const Triangle& tri = *intersection.triangle;
 
-    Vector v0p = intersection.point - tri.getV0();
-    Vector v0v1 = tri.getV1() - tri.getV0();
-    Vector v0v2 = tri.getV2() - tri.getV0();
+    Vector v0p = intersection.point - tri[0];
+    Vector v0v1 = tri[1]- tri[0];
+    Vector v0v2 = tri[2] - tri[0];
 
     float u = v0v1.cross(v0p).length() / v0v1.cross(v0v2).length();
     float v = v0v2.cross(v0p).length() / v0v1.cross(v0v2).length();
 
-    const Vertex& v0N = dynamic_cast<const Vertex&>(tri.getV0());
-    const Vertex& v1N = dynamic_cast<const Vertex&>(tri.getV1());
-    const Vertex& v2N = dynamic_cast<const Vertex&>(tri.getV2());
+    const Vertex& v0N = dynamic_cast<const Vertex&>(tri[0]);
+    const Vertex& v1N = dynamic_cast<const Vertex&>(tri[1]);
+    const Vertex& v2N = dynamic_cast<const Vertex&>(tri[2]);
 
     Vector averagedNormal =  v * v1N.normal + u * v2N.normal + (1 - u - v) * v0N.normal;
     averagedNormal.normalize();

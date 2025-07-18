@@ -100,9 +100,10 @@ std::ostream& operator<<(std::ostream& os, const Vector& v) {
     return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";
 }
 
-Triangle::Triangle(const Vector& v0, const Vector& v1, const Vector& v2) : v0 {v0}, v1 {v1}, v2 {v2} {
-    Vector v0v1 = v1 - v0;
-    Vector v0v2 = v2 - v0;
+Triangle::Triangle(std::initializer_list<Vector*> v) {
+    std::copy(v.begin(), v.end(), vertices);
+    Vector v0v1 = *vertices[1] - *vertices[0];
+    Vector v0v2 = *vertices[2] - *vertices[0];
 
     normal = v0v1.cross(v0v2);
     normal.normalize();
@@ -113,16 +114,9 @@ const Vector& Triangle::getNormal() const {
     return normal;
 }
 
-const Vector& Triangle::getV0() const {
-    return v0;
-}
-
-const Vector& Triangle::getV1() const {
-    return v1;
-}
-
-const Vector& Triangle::getV2() const {
-    return v2;
+const Vector& Triangle::operator[](size_t index) const {
+    if (index > 3) throw std::out_of_range("index out of range");
+    return  *vertices[index];
 }
 
 Matrix::Matrix(std::array<std::array<float, 3>, 3> m) : m {m} {}
@@ -137,6 +131,7 @@ Matrix Matrix::identity() {
 }
 
 std::array<float, 3> Matrix::operator[](int idx) {
+    if (idx > 3) throw std::out_of_range("index out of range");
     return m[idx];
 }
 

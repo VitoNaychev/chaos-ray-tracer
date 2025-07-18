@@ -26,7 +26,7 @@ Intersection intersect(const Ray& ray, const Triangle& tri) {
         };
     }
 
-    float rayDist = (tri.getV0() - ray.origin).dot(triNormal);
+    float rayDist = (tri[0] - ray.origin).dot(triNormal);
 
     float t = rayDist/rayProj;
     if (t <= 0) {
@@ -37,9 +37,9 @@ Intersection intersect(const Ray& ray, const Triangle& tri) {
     
     Vector p = ray.origin + t * ray.direction;
 
-    bool leftOfE0 = leftOfEdge(p, tri.getV0(), tri.getV1(), triNormal);
-    bool leftOfE1 = leftOfEdge(p, tri.getV1(), tri.getV2(), triNormal);
-    bool leftOfE2 = leftOfEdge(p, tri.getV2(), tri.getV0(), triNormal);
+    bool leftOfE0 = leftOfEdge(p, tri[0], tri[1], triNormal);
+    bool leftOfE1 = leftOfEdge(p, tri[1], tri[2], triNormal);
+    bool leftOfE2 = leftOfEdge(p, tri[2], tri[0], triNormal);
 
     if(leftOfE0 && leftOfE1 && leftOfE2) {
         return Intersection{

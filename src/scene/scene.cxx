@@ -41,11 +41,11 @@ void Camera::pan(const float angle) {
 Mesh::Mesh(vector<Vertex> vertices, vector<int> triangleIndicies, int materialIndex): 
     vertices {vertices}, triangleIndicies {triangleIndicies}, materialIndex {materialIndex} {
     for (size_t i = 0; i < triangleIndicies.size(); i += 3) {
-        const Vertex& v0 = this->vertices[triangleIndicies[i]];
-        const Vertex& v1 = this->vertices[triangleIndicies[i+1]];
-        const Vertex& v2 = this->vertices[triangleIndicies[i+2]];
-
-        Triangle triangle(v0, v1, v2);
+        Triangle triangle({
+            &(this->vertices[triangleIndicies[i]]),
+            &(this->vertices[triangleIndicies[i+1]]),
+            &(this->vertices[triangleIndicies[i+2]]),
+        });
         triangles.push_back(triangle);
     }
 
