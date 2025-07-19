@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "types.hxx"
+#include "interx.hxx"
 #include "scene.hxx"
 #include "raygen.hxx"
 #include "pixeldrawer.hpp"
@@ -20,7 +21,8 @@ private:
     std::vector<Triangle> triangles;
     RayGenerator raygen;
     
-    Color traceRay(const Ray& ray, int depth = 0);
+    Color trace(const Ray& ray, int depth = 0);
+    Color shade(const Intersection& intersection, const Material& material, const Light& light);
 };
 
 #endif // ENGINE_HXX
