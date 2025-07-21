@@ -1,17 +1,9 @@
 #include "engine.hxx"
 #include "interx.hxx"
-#include "shade.hxx"
 #include <algorithm>
 #include <numbers>
 #include <iostream>
 
-pixeldrawer::Color toPixelColor(Color c) {
-    return pixeldrawer::Color {
-        .r = static_cast<uint8_t>(std::min(1.0f, c.r) * 255),
-        .g = static_cast<uint8_t>(std::min(1.0f, c.g) * 255),
-        .b = static_cast<uint8_t>(std::min(1.0f, c.b) * 255),
-    };
-}
 
 Vector calculateSmoothHitNormal(const Intersection& intersection) {
     const Triangle& tri = *intersection.triangle;
@@ -33,7 +25,7 @@ Vector calculateSmoothHitNormal(const Intersection& intersection) {
     return averagedNormal;
 }
 
-Engine::Engine(Scene scene, pixeldrawer::PixelDrawer& drawer) 
+Engine::Engine(Scene scene, Drawer& drawer) 
     : scene{scene}, drawer{drawer}, raygen{scene.settings.width, scene.settings.height, scene.camera} {}
 
 
@@ -43,7 +35,7 @@ void Engine::render() {
     for (int i = 0; i < settings.height; i++) {
         for (int j = 0; j < settings.width; j++) {
             auto ray = raygen.generate(j, i);
-            drawer.draw(toPixelColor(trace(ray)));
+            drawer.draw(i, j, trace(ray));
         }
     }
 }

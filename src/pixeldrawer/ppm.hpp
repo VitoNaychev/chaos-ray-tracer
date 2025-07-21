@@ -3,22 +3,24 @@
 
 #include <fstream>
 
-#include "pixeldrawer.hpp"
+#include "engine.hpp"
 
-namespace pixeldrawer {
+struct PPMColor {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+};
 
-class PPMPixelDrawer : public PixelDrawer {
+class PPMDrawer : public Drawer {
 public:
-    PPMPixelDrawer(std::ostream& out, int width, int height);
-    ~PPMPixelDrawer();
-    void draw(Color c);
+    PPMDrawer(std::ostream& out, int width, int height);
+    ~PPMDrawer();
+    void draw(int x, int y, Color c);
 private:
     std::ostream& out;
     int width, height;
-private:
+
     void writeHeader(std::ostream& out, int width, int height);
 };
-
-}
 
 #endif

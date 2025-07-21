@@ -18,7 +18,7 @@ FetchContent_MakeAvailable(catch2)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/linalg)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/visualizer)
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/raygen)
@@ -27,5 +27,5 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/parser)
 
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/triangle)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/engine)
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/cmd)
+# add_subdirectory(${CMAKE_SOURCE_DIR}/src/cmd)
 

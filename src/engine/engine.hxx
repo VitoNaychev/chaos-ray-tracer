@@ -7,16 +7,21 @@
 #include "interx.hxx"
 #include "scene.hxx"
 #include "raygen.hxx"
-#include "pixeldrawer.hpp"
+
+class Drawer {
+public:
+    virtual ~Drawer() = 0;
+    virtual void draw(int x, int y, const Color& c) = 0;
+};
 
 class Engine {
 public:
-    Engine(Scene scene, pixeldrawer::PixelDrawer& drawer);
+    Engine(Scene scene, Drawer& drawer);
     void render();
     
 private:
     Scene scene;
-    pixeldrawer::PixelDrawer& drawer;
+    Drawer& drawer;
     
     std::vector<Triangle> triangles;
     RayGenerator raygen;
