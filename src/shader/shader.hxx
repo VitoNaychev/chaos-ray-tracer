@@ -5,7 +5,7 @@
 
 #include "types.hxx"
 #include "scene.hxx"
-#include "enginenew.hxx"
+#include "engine.hxx"
 
 using std::vector;
 

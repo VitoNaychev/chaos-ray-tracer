@@ -4,7 +4,7 @@
 #include <vector>
 #include "scene.hxx"
 #include "types.hxx"
-#include "enginenew.hxx"
+#include "engine.hxx"
 
 namespace raygen {
 

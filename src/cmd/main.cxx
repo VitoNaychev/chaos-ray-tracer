@@ -6,7 +6,7 @@
 
 #include "ppm.hpp"
 #include "crtscene.hpp"
-#include "enginenew.hxx"
+#include "engine.hxx"
 #include "raygen.hxx"
 #include "tracer.hxx"
 #include "shader.hxx"
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
         return shaderFactory.factory(scene);
     };    
 
-    engine::EngineNew engine(raygen::factory, shaderFactoryFn);
-    engine.render(scene, drawer);
+    engine::Engine engine(raygen::factory, shaderFactoryFn);
+    engine.renderThreaded(scene, drawer);
 
     return 0;
 }
