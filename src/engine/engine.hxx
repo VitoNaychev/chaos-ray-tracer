@@ -24,7 +24,7 @@ private:
     Drawer& drawer;
     
     std::vector<Triangle> triangles;
-    RayGenerator raygen;
+    raygen::RayGenerator raygen;
     
     Color trace(const Ray& ray, int depth = 0);
     Color shade(const Intersection& intersection, const Material& material, const Light& light);

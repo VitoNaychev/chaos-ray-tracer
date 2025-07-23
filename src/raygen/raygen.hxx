@@ -4,8 +4,11 @@
 #include <vector>
 #include "scene.hxx"
 #include "types.hxx"
+#include "enginenew.hxx"
 
-class RayGenerator {
+namespace raygen {
+
+class RayGenerator : public engine::RayGen {
 public:
     RayGenerator(int width, int height, Camera camera);
     Ray generate(int x, int y);
@@ -25,6 +28,8 @@ private:
 };
     
 
+RayGenerator* factory(const Scene& scene);
+
 std::vector<Pixel> getPixels(int width, int height);
 void getPixelCenters(std::vector<Pixel>&);
 
@@ -37,4 +42,5 @@ void normalizeVectors(std::vector<Vector>& vectors);
 
 std::vector<Ray> generateRays(int width, int height, Vector origin);
 
+}
 #endif

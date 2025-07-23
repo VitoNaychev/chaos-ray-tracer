@@ -2,11 +2,11 @@
 #include <cstdint>
 
 #include "ppm.hpp"
-#include "engine.hpp"
+#include "engine.hxx"
 
 using namespace std;
 
-PPMColor toPPMColor(Color c) {
+PPMColor toPPMColor(const Color& c) {
     return PPMColor {
         .r = static_cast<uint8_t>(std::min(1.0f, c.r) * 255),
         .g = static_cast<uint8_t>(std::min(1.0f, c.g) * 255),
@@ -23,8 +23,9 @@ PPMDrawer::PPMDrawer(ostream& out, int width, int height) : out {out}, width {wi
 PPMDrawer::~PPMDrawer() {
 }
 
-void PPMDrawer::draw(int x, int y, Color c) {
-    out << to_string(c.r) << " " << to_string(c.g) << " " << to_string(c.b) << " ";
+void PPMDrawer::draw(int x, int y, const Color& c) {
+    PPMColor ppmColor = toPPMColor(c);
+    out << to_string(ppmColor.r) << " " << to_string(ppmColor.g) << " " << to_string(ppmColor.b) << " ";
 }
 
 void PPMDrawer::writeHeader(ostream& out, int width, int height) {

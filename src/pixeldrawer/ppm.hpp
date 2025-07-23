@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "engine.hpp"
+#include "enginenew.hxx"
 
 struct PPMColor {
     uint8_t r;
@@ -11,11 +11,11 @@ struct PPMColor {
     uint8_t b;
 };
 
-class PPMDrawer : public Drawer {
+class PPMDrawer : public engine::Drawer {
 public:
     PPMDrawer(std::ostream& out, int width, int height);
     ~PPMDrawer();
-    void draw(int x, int y, Color c);
+    void draw(int x, int y, const Color& c);
 private:
     std::ostream& out;
     int width, height;

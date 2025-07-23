@@ -1,11 +1,15 @@
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 #include <chrono>
 
 #include "ppm.hpp"
 #include "crtscene.hpp"
-#include "engine.hxx"
+#include "enginenew.hxx"
+#include "raygen.hxx"
+#include "tracer.hxx"
+#include "shader.hxx"
 
 using namespace std;
 using namespace std::chrono;
@@ -28,10 +32,16 @@ int main(int argc, char *argv[]) {
     if (!outFile) {
         std::cerr << "Failed to open file.\n";
     }
-    pixeldrawer::PPMPixelDrawer drawer(outFile, settings.width, settings.height);
+    PPMDrawer drawer(outFile, settings.width, settings.height);
 
-    Engine engine(scene, drawer);
-    engine.render();
+
+    shader::ShaderFactory shaderFactory {tracer::factory};
+    auto shaderFactoryFn = [&shaderFactory](const Scene& scene) {
+        return shaderFactory.factory(scene);
+    };    
+
+    engine::EngineNew engine(raygen::factory, shaderFactoryFn);
+    engine.render(scene, drawer);
 
     return 0;
 }

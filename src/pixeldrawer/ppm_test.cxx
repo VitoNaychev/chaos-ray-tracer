@@ -3,7 +3,6 @@
 #include <sstream>
 #include <iostream>
 
-#include "pixeldrawer.hpp"
 #include "ppm.hpp"
 
 using namespace std;

@@ -68,7 +68,7 @@ const std::vector<int>& Mesh::getTriangleIndicies() {
     return triangleIndicies;
 }
 
-const int Mesh::getMaterialIndex() {
+const int Mesh::getMaterialIndex() const {
     return materialIndex;
 }
 

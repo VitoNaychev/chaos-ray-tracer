@@ -2,6 +2,60 @@
 #include "types.hxx"
 #include "raygen.hxx"
 
+namespace raygen {
+
+RayGenerator::RayGenerator(int width, int height, Camera camera) : width {width}, height {height}, camera {camera} {}
+
+Ray RayGenerator::generate(int x, int y) {
+    Pixel p {float(x), float(y)};
+
+    centerPixel(p);
+    normalize(p);
+
+    toCV(p);
+    adjustAspectRatio(p);
+
+    auto v = vectorFor(p);
+    v.normalize();
+
+    rotate(v);
+    return Ray{
+        .origin = camera.getPosition(),
+        .direction = v,
+    };
+}
+
+void RayGenerator::centerPixel(Pixel& p) {
+    p.x += 0.5;
+    p.y += 0.5;
+}
+
+void RayGenerator::normalize(Pixel& p) {
+    p.x /= width;
+    p.y /= height;
+}
+
+void RayGenerator::toCV(Pixel& p) {
+    p.x = (p.x * 2) - 1;
+    p.y = -((p.y * 2) - 1);
+}
+
+void RayGenerator::adjustAspectRatio(Pixel& p) {
+    p.x *= float(width)/height;
+}
+
+Vector RayGenerator::vectorFor(const Pixel& p) {
+    return Vector(p.x, p.y, -1);
+}
+
+void RayGenerator::rotate(Vector& v) {
+    v = v * camera.getRotation();
+}
+
+RayGenerator* factory(const Scene& scene) {
+    return new RayGenerator {scene.settings.width, scene.settings.height, scene.camera};
+}
+
 
 std::vector<Pixel> getPixels(int width, int height) {
     std::vector<Pixel> pixels;
@@ -86,50 +140,5 @@ std::vector<Ray> generateRays(int width, int height, Vector origin) {
     return getRays(origin, vectors);
 }
 
-RayGenerator::RayGenerator(int width, int height, Camera camera) : width {width}, height {height}, camera {camera} {}
 
-Ray RayGenerator::generate(int x, int y) {
-    Pixel p {float(x), float(y)};
-
-    centerPixel(p);
-    normalize(p);
-
-    toCV(p);
-    adjustAspectRatio(p);
-
-    auto v = vectorFor(p);
-    v.normalize();
-
-    rotate(v);
-    return Ray{
-        .origin = camera.getPosition(),
-        .direction = v,
-    };
-}
-
-void RayGenerator::centerPixel(Pixel& p) {
-    p.x += 0.5;
-    p.y += 0.5;
-}
-
-void RayGenerator::normalize(Pixel& p) {
-    p.x /= width;
-    p.y /= height;
-}
-
-void RayGenerator::toCV(Pixel& p) {
-    p.x = (p.x * 2) - 1;
-    p.y = -((p.y * 2) - 1);
-}
-
-void RayGenerator::adjustAspectRatio(Pixel& p) {
-    p.x *= float(width)/height;
-}
-
-Vector RayGenerator::vectorFor(const Pixel& p) {
-    return Vector(p.x, p.y, -1);
-}
-
-void RayGenerator::rotate(Vector& v) {
-    v = v * camera.getRotation();
 }

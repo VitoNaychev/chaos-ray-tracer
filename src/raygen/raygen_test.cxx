@@ -6,6 +6,8 @@
 #include "types.hxx"
 #include "raygen.hxx"
 
+using namespace raygen;
+
 bool nearlyEqual(Vector a, Vector b, float epsilon = 1e-4) {
     Vector diff = a - b;
 

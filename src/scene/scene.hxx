@@ -54,7 +54,7 @@ struct Mesh{
 
     const std::vector<Vertex>& getVertices();
     const std::vector<int>& getTriangleIndicies();
-    const int getMaterialIndex();
+    const int getMaterialIndex() const;
 
     const std::vector<Triangle>& getTriangles() const;
 private:
