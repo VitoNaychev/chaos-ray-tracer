@@ -3,12 +3,14 @@
 
 #include "engine.hxx"
 #include "scene.hxx"
+#include "workqueue.hxx"
 
 #include "raygen.hxx"
 #include "tracer.hxx"
 #include "shader.hxx"
 
 namespace engine{
+
 
 Engine::Engine(RayGenFactory raygenFactory, ShaderFactory shaderFactory) 
     : raygenFactory{raygenFactory}, shaderFactory{shaderFactory} {}
@@ -30,25 +32,34 @@ void Engine::renderThreaded(Scene& scene, Drawer& drawer) {
     auto raygen = raygenFactory(scene);
     auto shader = shaderFactory(scene);
     
-    std::vector<std::thread> threads;
+    WorkQueue workQueue {12};
 
-    for (int i = 0; i < 8; ++ i) {
-        int startX = scene.settings.width / 8 * i;
-        int endX = scene.settings.width / 8 * (i+1);
-        threads.push_back(std::thread(renderPart, &drawer, raygen, shader, startX, 0, endX, scene.settings.height));
+    for (int i = 0; i < 10; ++ i) {
+        for (int j = 0; j < 10; ++ j) {
+            Edge start = {
+                .x = scene.settings.width / 10 * i,
+                .y = scene.settings.height / 10 * j,
+            };
+            Edge end = {
+                .x = scene.settings.width / 10 * (i+1),
+                .y = scene.settings.height / 10 * (j+1),
+            };
+
+            workQueue.push([this, &drawer, raygen, shader, start, end]() {
+                this->renderSection(drawer, raygen, shader, start, end);
+            });
+        }
     }
 
-    for (auto& t : threads) {
-        t.join();
-    }
+    workQueue.wait();
     drawer.flush();
 }
 
-void renderPart(Drawer* drawer, RayGen* raygen, Shader* shader, int startX, int startY, int endX, int endY) {
-    for (int i = startY; i < endY; i++) {
-        for (int j = startX; j < endX; j++) {
+void Engine::renderSection(Drawer& drawer, RayGen* raygen, Shader* shader, Edge start, Edge end) {
+    for (int i = start.y; i < end.y; i++) {
+        for (int j = start.x; j < end.x; j++) {
             Ray ray = raygen->generate(j, i);
-            drawer->draw(i, j, shader->shade(ray));
+            drawer.draw(i, j, shader->shade(ray));
         }
     }
 }

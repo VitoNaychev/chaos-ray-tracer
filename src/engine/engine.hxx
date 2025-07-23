@@ -31,6 +31,11 @@ public:
 typedef std::function<RayGen*(const Scene&)> RayGenFactory;
 typedef std::function<Shader*(const Scene&)> ShaderFactory;
 
+struct Edge {
+    int x;
+    int y;
+};
+
 class Engine {
 public:
     Engine(RayGenFactory raygenFactory, ShaderFactory shaderFactory);
@@ -38,11 +43,12 @@ public:
     void render(Scene& scene, Drawer& drawer);
     void renderThreaded(Scene& scene, Drawer& drawer);
 private:
+    void renderSection(Drawer& drawer, RayGen* raygen, Shader* shader, Edge start, Edge end);
+
     RayGenFactory raygenFactory;
     ShaderFactory shaderFactory;
 };
 
-void renderPart(Drawer* drawer, RayGen* raygen, Shader* shader, int startX, int startY, int endX, int endY);
 
 
 class Renderer {
