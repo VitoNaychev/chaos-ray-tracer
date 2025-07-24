@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "aabb.hxx"
 #include "shader.hxx"
 #include "scene.hxx"
 
@@ -15,6 +16,12 @@ public:
     Tracer(const vector<Mesh>& objects, const vector<Material>& materials);
     shader::Intersection trace(const Ray& ray);
 private:
+    void constructAABB();
+
+    AABB aabb = {
+        .max = Vector{-INFINITY, -INFINITY,-INFINITY},
+        .min = Vector{INFINITY, INFINITY, INFINITY}
+    };
     const vector<Mesh>& objects;
     const vector<Material>& materials;
 };

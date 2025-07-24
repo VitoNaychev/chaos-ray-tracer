@@ -40,10 +40,11 @@ struct Vector {
     Vector cross(const Vector& rhs);
     float dot(const Vector& rhs) const;
 
+    friend auto operator<=>(const Vector& v1, const Vector& v2) = default;
+
     float x, y, z;
 };
 
-bool operator==(const Vector& v1, const Vector& v2);
 
 Vector operator-(const Vector& v1, const Vector& v2);
 Vector operator+(const Vector& v1, const Vector& v2);

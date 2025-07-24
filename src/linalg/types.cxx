@@ -61,10 +61,6 @@ float Vector::dot(const Vector& rhs) const {
     return (x * rhs.x) + (y * rhs.y) + (z * rhs.z); 
 }
 
-bool operator==(const Vector& v1, const Vector& v2) {
-    return v1.x == v2.x && v1.y == v2.y && v1.z == v2.z; 
-}
-
 Vector operator-(const Vector& v1, const Vector& v2) {
     float x = v1.x - v2.x;
     float y = v1.y - v2.y;

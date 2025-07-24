@@ -5,7 +5,7 @@ project(Tracer LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_library(Tracer tracer.cxx interx.cxx)
+add_library(Tracer tracer.cxx interx.cxx aabb.cxx)
 target_link_libraries(Tracer PUBLIC Shader LinAlg Scene)
 target_include_directories(Tracer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
