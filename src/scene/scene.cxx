@@ -1,4 +1,5 @@
 #include <cmath>
+#include <numbers>
 #include "scene.hxx"
 #include "types.hxx"
 
@@ -12,7 +13,7 @@ Matrix Camera::getRotation() {
     return rotation;
 }
 
-Camera::Camera(Vector pos, Matrix rot) : position {pos}, rotation {rot} {}
+Camera::Camera(Vector pos, Matrix rot) : position {pos}, rotation {rot}, fov {numbers::pi/4}{}
 
 void Camera::dolly(const float z) {
     position.z += z;
@@ -37,6 +38,13 @@ void Camera::pan(const float angle) {
     rotation = rotation * panMatrix;
 }
 
+void Camera::setFOV(const float degs) {
+    fov = degs;
+}
+
+float Camera::getFOV() const {
+    return fov;
+}
 
 Mesh::Mesh(vector<Vertex> vertices, vector<int> triangleIndicies, int materialIndex): 
     vertices {vertices}, triangleIndicies {triangleIndicies}, materialIndex {materialIndex} {

@@ -82,11 +82,9 @@ Settings getSettings(Document& doc) {
      auto& settings = requireObject(doc, "settings");
 
     auto& image_settings = requireObject(settings, "image_settings");
-    
    
     int width = requireInt(image_settings, "width");
     int height = requireInt(image_settings, "height");
-
 
     auto& backgroundField = requireArray(settings, "background_color", 3);
 

@@ -7,8 +7,9 @@
 #include "scene.hxx"
 #include "types.hxx"
 
-std::string getStringValue(std::istream&);
 Scene parseCRTScene(std::istream& input);
+
+std::string getStringValue(std::istream&);
 
 Settings getSettings(rapidjson::Document& doc);
 Camera getCamera(rapidjson::Document& doc);

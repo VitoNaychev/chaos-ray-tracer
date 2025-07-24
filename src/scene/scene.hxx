@@ -20,12 +20,15 @@ public:
     void jib(const float y);
     void truck(const float x);
 
-
     void pan(const float degs);
     // void tilt(const float degs);
+
+    void setFOV(const float degs);
+    float getFOV() const;
 private:
     Matrix rotation;
     Vector position;
+    float fov;
 };
 
 struct Settings {

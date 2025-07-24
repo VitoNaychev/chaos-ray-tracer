@@ -16,8 +16,8 @@ struct Intersection {
     float distance;
     Vector direction;
 
-    const Triangle* triangle;
-    const Mesh* object;
+    const Vector normal;
+    int materialIndex;
 };
 
 class Tracer {

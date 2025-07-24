@@ -18,6 +18,7 @@ private:
 
     void toCV(Pixel& p);
     void adjustAspectRatio(Pixel& p);
+    void adjustFOV(Pixel& p);
 
     Vector vectorFor(const Pixel& p);
 

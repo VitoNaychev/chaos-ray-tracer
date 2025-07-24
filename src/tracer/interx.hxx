@@ -7,7 +7,7 @@
 struct Intersection {
     Vector point;
     float distance;
-    Triangle const* triangle;
+    Vector normal;
 };
 
 /**
@@ -28,7 +28,7 @@ bool leftOfEdge(Vector p, Vector v0, Vector v1, Vector normal);
  * @param tri The triangle to test for intersection
  * @return Intersection struct with point, distance, and normal, or distance=INFINITY if no intersection
  */
-Intersection intersect(const Ray& ray, const Triangle& tri);
+Intersection intersect(const Ray& ray, const Triangle& tri, bool isSmooth);
 
 /**
  * Check if a ray intersects with a triangle.

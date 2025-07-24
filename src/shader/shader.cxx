@@ -5,26 +5,6 @@
 
 namespace shader {
 
-Vector calculateSmoothHitNormal(const Intersection& intersection) {
-    const Triangle& tri = *intersection.triangle;
-
-    Vector v0p = intersection.point - tri[0];
-    Vector v0v1 = tri[1]- tri[0];
-    Vector v0v2 = tri[2] - tri[0];
-
-    float u = v0v1.cross(v0p).length() / v0v1.cross(v0v2).length();
-    float v = v0v2.cross(v0p).length() / v0v1.cross(v0v2).length();
-
-    const Vertex& v0N = dynamic_cast<const Vertex&>(tri[0]);
-    const Vertex& v1N = dynamic_cast<const Vertex&>(tri[1]);
-    const Vertex& v2N = dynamic_cast<const Vertex&>(tri[2]);
-
-    Vector averagedNormal =  v * v1N.normal + u * v2N.normal + (1 - u - v) * v0N.normal;
-    averagedNormal.normalize();
-
-    return averagedNormal;
-}
-
 Shader::Shader(Tracer* tracer, const vector<Mesh>& objects, const vector<Material>& materials, const vector<Light>& lights, const Color background) 
     : tracer{tracer}, objects{objects}, materials(materials), lights(lights), background(background) {
 }
@@ -36,7 +16,7 @@ Color Shader::shade(const Ray& ray) {
         return background;
     }
     
-    Material material = materials[interx.object->getMaterialIndex()];
+    Material material = materials[interx.materialIndex];
 
     if (material.type == MaterialType::Diffuse) {
         return shadeDiffuse(interx);
@@ -47,7 +27,7 @@ Color Shader::shade(const Ray& ray) {
 
 
 Ray Shader::generateReflectionRay(const Intersection& interx) {
-    const Vector& hitNormal = interx.triangle->getNormal();
+    const Vector& hitNormal = interx.normal;
     return Ray{
         .origin = interx.point,
         .direction = interx.direction - 2 * interx.direction.dot(hitNormal) * hitNormal, 
@@ -62,7 +42,7 @@ Ray Shader::generateShadowRay(const Intersection& interx, const Vector& hitNorma
 }
 
 Color Shader::shadeReflective(const Intersection& interx) {
-    Material material = materials[interx.object->getMaterialIndex()];
+    Material material = materials[interx.materialIndex];
 
     Color albedo = material.albedo;
     Ray currentRay = generateReflectionRay(interx); 
@@ -74,7 +54,7 @@ Color Shader::shadeReflective(const Intersection& interx) {
             return albedo * background;
         }
         
-        material = materials[reflectionInterx.object->getMaterialIndex()];
+        material = materials[reflectionInterx.materialIndex];
         if (material.type == MaterialType::Reflective) {
             albedo = albedo * material.albedo;
 
@@ -99,13 +79,9 @@ Color Shader::shadeDiffuseSingleLight(const Intersection& interx, const Light& l
     Vector lightDir = light.position - interx.point;
     float sphereRadius = lightDir.length();
     
-    Vector hitNormal = interx.triangle->getNormal();
-    Material material = materials[interx.object->getMaterialIndex()];
-    
-    if (material.smooth) {
-        hitNormal = calculateSmoothHitNormal(interx);
-    }  
-    
+    Vector hitNormal = interx.normal;
+    Material material = materials[interx.materialIndex];
+
     lightDir.normalize();
     float cosLaw = lightDir.dot(hitNormal);
     if (cosLaw <= 0) {

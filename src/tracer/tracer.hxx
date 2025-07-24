@@ -12,10 +12,11 @@ namespace tracer {
 
 class Tracer : public shader::Tracer{
 public:
-    Tracer(const vector<Mesh>& objects);
+    Tracer(const vector<Mesh>& objects, const vector<Material>& materials);
     shader::Intersection trace(const Ray& ray);
 private:
     const vector<Mesh>& objects;
+    const vector<Material>& materials;
 };
 
 Tracer* factory(const Scene& scene);

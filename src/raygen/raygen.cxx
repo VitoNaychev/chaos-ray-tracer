@@ -1,4 +1,5 @@
 #include <vector>
+#include <cmath>
 #include "types.hxx"
 #include "raygen.hxx"
 
@@ -14,6 +15,7 @@ Ray RayGenerator::generate(int x, int y) {
 
     toCV(p);
     adjustAspectRatio(p);
+    adjustFOV(p);
 
     auto v = vectorFor(p);
     v.normalize();
@@ -42,6 +44,11 @@ void RayGenerator::toCV(Pixel& p) {
 
 void RayGenerator::adjustAspectRatio(Pixel& p) {
     p.x *= float(width)/height;
+}
+
+void RayGenerator::adjustFOV(Pixel& p) {
+    p.x *= std::tan(camera.getFOV());
+    p.y *= std::tan(camera.getFOV());
 }
 
 Vector RayGenerator::vectorFor(const Pixel& p) {
