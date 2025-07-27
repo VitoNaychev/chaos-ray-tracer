@@ -68,7 +68,7 @@ private:
     std::vector<Triangle> triangles;
 };
 
-struct Scene {    
+struct Scene {
     Settings settings;
     Camera camera;
 

@@ -11,7 +11,7 @@ using namespace raygen;
 bool nearlyEqual(Vector a, Vector b, float epsilon = 1e-4) {
     Vector diff = a - b;
 
-    return std::fabs(diff.x) < epsilon && std::fabs(diff.y) < epsilon && std::fabs(diff.z) < epsilon;
+    return std::fabs(diff[AxisEnum::X]) < epsilon && std::fabs(diff[AxisEnum::Y]) < epsilon && std::fabs(diff[AxisEnum::Z]) < epsilon;
 }
 
 TEST_CASE("Get pixels for image with width and height") {

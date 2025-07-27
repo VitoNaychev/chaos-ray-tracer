@@ -38,62 +38,72 @@ std::ostream& operator<<(std::ostream& os, const Pixel& p) {
     return os << "Pixel{x=" << p.x << ", y=" << p.y << "}";
 }
 
+Vector::Vector(float x, float y, float z) {
+    c[AxisEnum::X] = x;
+    c[AxisEnum::Y] = y;
+    c[AxisEnum::Z] = z;
+}
+
+Vector::Vector(std::initializer_list<float> coords) {
+    std::copy(coords.begin(), coords.end(), this->c);
+}
+
 float Vector::length() {
-    return sqrt(x * x + y * y + z * z);
+    return sqrt(c[AxisEnum::X] * c[AxisEnum::X] + c[AxisEnum::Y] * c[AxisEnum::Y] + c[AxisEnum::Z] * c[AxisEnum::Z]);
 }
 
 void Vector::normalize() {
     float l = length();
-    x /= l;
-    y /= l;
-    z /= l;
+    c[AxisEnum::X] /= l;
+    c[AxisEnum::Y] /= l;
+    c[AxisEnum::Z] /= l;
 }
 
 Vector Vector::cross(const Vector& rhs) {
     return Vector(
-        y * rhs.z - z * rhs.y,
-        z * rhs.x - x * rhs.z,
-        x * rhs.y - y * rhs.x
+        c[AxisEnum::Y] * rhs.c[AxisEnum::Z] - c[AxisEnum::Z] * rhs.c[AxisEnum::Y],
+        c[AxisEnum::Z] * rhs.c[AxisEnum::X] - c[AxisEnum::X] * rhs.c[AxisEnum::Z],
+        c[AxisEnum::X] * rhs.c[AxisEnum::Y] - c[AxisEnum::Y] * rhs.c[AxisEnum::X]
     );
 }
 
 float Vector::dot(const Vector& rhs) const {
-    return (x * rhs.x) + (y * rhs.y) + (z * rhs.z); 
+    return (c[AxisEnum::X] * rhs.c[AxisEnum::X]) + (c[AxisEnum::Y] * rhs.c[AxisEnum::Y]) + (c[AxisEnum::Z] * rhs.c[AxisEnum::Z]); 
 }
 
 Vector operator-(const Vector& v1, const Vector& v2) {
-    float x = v1.x - v2.x;
-    float y = v1.y - v2.y;
-    float z = v1.z - v2.z;
-
-    return Vector(x, y, z);
+    return Vector(
+        v1.c[AxisEnum::X] - v2.c[AxisEnum::X],
+        v1.c[AxisEnum::Y] - v2.c[AxisEnum::Y],
+        v1.c[AxisEnum::Z] - v2.c[AxisEnum::Z]
+    );
 }
 
 Vector operator+(const Vector& v1, const Vector& v2) {
-    float x = v1.x + v2.x;
-    float y = v1.y + v2.y;
-    float z = v1.z + v2.z;
-
-    return Vector(x, y, z);
+    return Vector(
+        v1.c[AxisEnum::X] + v2.c[AxisEnum::X],
+        v1.c[AxisEnum::Y] + v2.c[AxisEnum::Y],
+        v1.c[AxisEnum::Z] + v2.c[AxisEnum::Z]
+    );
 }
 
 Vector operator*(const Vector& v, float scalar) {
-    return Vector(v.x * scalar, v.y * scalar, v.z * scalar);
+    return Vector(v.c[AxisEnum::X] * scalar, v.c[AxisEnum::Y] * scalar, v.c[AxisEnum::Z] * scalar);
 }
 
 Vector operator*(float scalar, const Vector& v) {
-    return Vector(v.x * scalar, v.y * scalar, v.z * scalar);
+    return Vector(v.c[AxisEnum::X] * scalar, v.c[AxisEnum::Y] * scalar, v.c[AxisEnum::Z] * scalar);
 }
 
 Vector& operator+=(Vector& v1, const Vector& v2) {
-    v1.x += v2.x;
-    v1.y += v2.y;
-    v1.z += v2.z;
+    v1.c[AxisEnum::X] += v2.c[AxisEnum::X];
+    v1.c[AxisEnum::Y] += v2.c[AxisEnum::Y];
+    v1.c[AxisEnum::Z] += v2.c[AxisEnum::Z];
     return v1;
 }
 
 std::ostream& operator<<(std::ostream& os, const Vector& v) {
-    return os << "Vector{x=" << v.x << ", y=" << v.y << ", z=" << v.z << "}";
+    return os << "Vector{x=" << v.c[AxisEnum::X] << ", y=" << v.c[AxisEnum::Y] << ", z=" << v.c[AxisEnum::Z] << "}";
 }
 
 Triangle::Triangle(std::initializer_list<Vector*> v) {
@@ -148,10 +158,18 @@ Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
 
 Vector operator*(const Vector& lhs, const Matrix& rhs) {
     return Vector(
-        lhs.x * rhs.m[0][0] + lhs.y * rhs.m[1][0] + lhs.z * rhs.m[2][0],
-        lhs.x * rhs.m[0][1] + lhs.y * rhs.m[1][1] + lhs.z * rhs.m[2][1],
-        lhs.x * rhs.m[0][2] + lhs.y * rhs.m[1][2] + lhs.z * rhs.m[2][2]
+        lhs.c[AxisEnum::X] * rhs.m[0][0] + lhs.c[AxisEnum::Y] * rhs.m[1][0] + lhs.c[AxisEnum::Z] * rhs.m[2][0],
+        lhs.c[AxisEnum::X] * rhs.m[0][1] + lhs.c[AxisEnum::Y] * rhs.m[1][1] + lhs.c[AxisEnum::Z] * rhs.m[2][1],
+        lhs.c[AxisEnum::X] * rhs.m[0][2] + lhs.c[AxisEnum::Y] * rhs.m[1][2] + lhs.c[AxisEnum::Z] * rhs.m[2][2]
     );
+}
+
+float& Vector::operator[](AxisEnum axis) {
+    return c[axis];
+}
+
+const float& Vector::operator[](AxisEnum axis) const {
+    return c[axis];
 }
 
 bool operator==(const Matrix& lhs, const Matrix& rhs) {

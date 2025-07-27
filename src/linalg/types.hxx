@@ -29,9 +29,17 @@ bool operator==(const Pixel& p1, const Pixel& p2);
 
 std::ostream& operator<<(std::ostream& os, const Pixel& p);
 
+enum AxisEnum {
+    X,
+    Y,
+    Z,
+    COUNT
+};
+
 struct Vector {
     Vector() = default;
-    Vector(float x, float y, float z) : x(x), y(y), z(z) {}
+    Vector(float x, float y, float z);
+    Vector(std::initializer_list<float> coords);
     virtual ~Vector() = default;
     
     float length();
@@ -40,9 +48,12 @@ struct Vector {
     Vector cross(const Vector& rhs);
     float dot(const Vector& rhs) const;
 
+    float& operator[](AxisEnum axis);
+    const float& operator[](AxisEnum axis) const;
+
     friend auto operator<=>(const Vector& v1, const Vector& v2) = default;
 
-    float x, y, z;
+    float c[AxisEnum::COUNT];
 };
 
 
@@ -62,6 +73,7 @@ class Triangle {
 public: 
     Triangle();
     Triangle(std::initializer_list<Vector*> v);
+    virtual ~Triangle() = default;
 
     const Vector& operator[](size_t index) const;
     const Vector& getNormal() const;

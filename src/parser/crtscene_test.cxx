@@ -26,9 +26,9 @@ TEST_CASE("Parses CRTScene file") {
     Vector position(0, 0, 0);
     Matrix rotation = Matrix::identity();
     vector<Vertex> vertices;
-    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
-    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
-    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    Vertex v1; v1[AxisEnum::X] = -1.75; v1[AxisEnum::Y] = -1.75; v1[AxisEnum::Z] = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2[AxisEnum::X] = 1.75; v2[AxisEnum::Y] = -1.75; v2[AxisEnum::Z] = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3[AxisEnum::X] = 0; v3[AxisEnum::Y] = 1.75; v3[AxisEnum::Z] = -3; v3.normal = {0, 0, 0};
     vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
 
@@ -51,14 +51,14 @@ TEST_CASE("Parses CRTScene file") {
     input << rotation[2][0] << "," << rotation[2][1] << "," << rotation[2][2];
     input << "],";
     input << "\"position\":";
-    input << "[" << position.x << "," << position.y << "," << position.z << "]";
+    input << "[" << position[AxisEnum::X] << "," << position[AxisEnum::Y] << "," << position[AxisEnum::Z] << "]";
     input << "},";
     input << "\"objects\": [";
     input << "{";
     input << "\"vertices\": [";
-    input << vertices[0].x << "," << vertices[0].y << "," << vertices[0].z << ",";
-    input << vertices[1].x << "," << vertices[1].y << "," << vertices[1].z << ",";
-    input << vertices[2].x << "," << vertices[2].y << "," << vertices[2].z;
+    input << vertices[0][AxisEnum::X] << "," << vertices[0][AxisEnum::Y] << "," << vertices[0][AxisEnum::Z] << ",";
+    input << vertices[1][AxisEnum::X] << "," << vertices[1][AxisEnum::Y] << "," << vertices[1][AxisEnum::Z] << ",";
+    input << vertices[2][AxisEnum::X] << "," << vertices[2][AxisEnum::Y] << "," << vertices[2][AxisEnum::Z];
     input << "],";
     input << "\"triangles\":";
     input << "[" << triangleIndicies[0] << "," << triangleIndicies[1] << "," << triangleIndicies[2] << "]";
@@ -420,7 +420,7 @@ TEST_CASE("Parser camera position and rotation") {
     input << rotation[2][0] << "," << rotation[2][1] << "," << rotation[2][2];
     input << "],";
     input << "\"position\": [";
-    input << position.x << "," << position.y << "," << position.z;
+    input << position[AxisEnum::X] << "," << position[AxisEnum::Y] << "," << position[AxisEnum::Z];
     input << "]" ;
     input << "}\
 }";
@@ -665,9 +665,9 @@ TEST_CASE("Throws exception on \"position\" does not contain exactly 3 elements"
 
 TEST_CASE("Parses objects") {
     vector<Vertex> vertices;
-    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
-    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
-    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    Vertex v1; v1[AxisEnum::X] = -1.75; v1[AxisEnum::Y] = -1.75; v1[AxisEnum::Z] = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2[AxisEnum::X] = 1.75; v2[AxisEnum::Y] = -1.75; v2[AxisEnum::Z] = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3[AxisEnum::X] = 0; v3[AxisEnum::Y] = 1.75; v3[AxisEnum::Z] = -3; v3.normal = {0, 0, 0};
     vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
     stringstream input;
@@ -676,9 +676,9 @@ TEST_CASE("Parses objects") {
     \"objects\": [";
     input << "{";
     input << "\"vertices\": [";
-    input << vertices[0].x << "," << vertices[0].y << "," << vertices[0].z << ",";
-    input << vertices[1].x << "," << vertices[1].y << "," << vertices[1].z << ",";
-    input << vertices[2].x << "," << vertices[2].y << "," << vertices[2].z;
+    input << vertices[0][AxisEnum::X] << "," << vertices[0][AxisEnum::Y] << "," << vertices[0][AxisEnum::Z] << ",";
+    input << vertices[1][AxisEnum::X] << "," << vertices[1][AxisEnum::Y] << "," << vertices[1][AxisEnum::Z] << ",";
+    input << vertices[2][AxisEnum::X] << "," << vertices[2][AxisEnum::Y] << "," << vertices[2][AxisEnum::Z];
     input << "],";
     input << "\"triangles\": [";
     input << triangleIndicies[0] << "," << triangleIndicies[1] << "," << triangleIndicies[2];
@@ -701,9 +701,9 @@ TEST_CASE("Parses objects") {
 
 TEST_CASE("Example objects test case") {
     vector<Vertex> vertices;
-    Vertex v1; v1.x = -1.75; v1.y = -1.75; v1.z = -3; v1.normal = {0, 0, 0};
-    Vertex v2; v2.x = 1.75; v2.y = -1.75; v2.z = -3; v2.normal = {0, 0, 0};
-    Vertex v3; v3.x = 0; v3.y = 1.75; v3.z = -3; v3.normal = {0, 0, 0};
+    Vertex v1; v1[AxisEnum::X] = -1.75; v1[AxisEnum::Y] = -1.75; v1[AxisEnum::Z] = -3; v1.normal = {0, 0, 0};
+    Vertex v2; v2[AxisEnum::X] = 1.75; v2[AxisEnum::Y] = -1.75; v2[AxisEnum::Z] = -3; v2.normal = {0, 0, 0};
+    Vertex v3; v3[AxisEnum::X] = 0; v3[AxisEnum::Y] = 1.75; v3[AxisEnum::Z] = -3; v3.normal = {0, 0, 0};
     vertices = {v1, v2, v3};
     vector<int> triangleIndicies {0, 1, 2};
     stringstream input;

@@ -16,15 +16,15 @@ Matrix Camera::getRotation() {
 Camera::Camera(Vector pos, Matrix rot) : position {pos}, rotation {rot}, fov {numbers::pi/4}{}
 
 void Camera::dolly(const float z) {
-    position.z += z;
+    position[AxisEnum::Z] += z;
 }
 
 void Camera::jib(const float y) {
-    position.y += y;
+    position[AxisEnum::Y] += y;
 }
 
 void Camera::truck(const float x) {
-    position.x += x;
+    position[AxisEnum::X] += x;
 }
 
 void Camera::pan(const float angle) {

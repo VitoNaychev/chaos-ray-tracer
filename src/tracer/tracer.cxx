@@ -4,54 +4,53 @@
 #include "tracer.hxx"
 #include "interx.hxx"
 #include "aabb.hxx"
+#include "acctree.hxx"
 
 namespace tracer {
 
-Tracer::Tracer(const vector<Mesh>& objects, const vector<Material>& materials) : objects(objects), materials(materials) {
-    constructAABB();
+TriangleWrapper::TriangleWrapper(const Triangle& triangle, const Mesh* mesh) 
+    : Triangle(triangle), containingMesh(mesh) {
 }
 
-void Tracer::constructAABB() {
+const Mesh* TriangleWrapper::getContainingMesh() const {
+    return containingMesh;
+}
+
+vector<Triangle*> createWrappedTriangles(const vector<Mesh>& objects) {
+    vector<Triangle*> allTriangles;
     for (auto& object : objects) {
         for (auto& tri : object.getTriangles()) {
-            for (int i = 0; i < 3; ++ i) {
-                aabb.min.x = std::min(aabb.min.x, tri[i].x);
-                aabb.min.y = std::min(aabb.min.y, tri[i].y);
-                aabb.min.z = std::min(aabb.min.z, tri[i].z);
-
-                aabb.max.x = std::max(aabb.max.x, tri[i].x);
-                aabb.max.y = std::max(aabb.max.y, tri[i].y);
-                aabb.max.z = std::max(aabb.max.z, tri[i].z);
-            }
+            allTriangles.push_back(new TriangleWrapper(tri, &object));
         }
     }
+    return allTriangles;
+}
+
+Tracer::Tracer(const vector<Mesh>& objects, const vector<Material>& materials) 
+    : objects(objects), materials(materials), accTree(createWrappedTriangles(objects), 1) {
 }
 
 shader::Intersection Tracer::trace(const Ray& ray) {
-    if (!doesIntersect(ray, aabb)) {
-        return shader::Intersection {
-            .distance = INFINITY,
-        };
-    }
-
     Intersection closestIntersection {
         .distance = INFINITY,
     };
 
     const Mesh* closesObject = nullptr;
 
-    for (auto& object : objects) {
-        const Material& material = materials[object.getMaterialIndex()];
+    vector<Triangle*> triangles = accTree.intersect(ray);
 
-        for (auto& tri : object.getTriangles()) {
-            Intersection i = intersect(ray, tri, material.smooth);
-            if (i.distance < closestIntersection.distance) {
-                closestIntersection = i;
-                closesObject = &object;
-            }
+    for (auto tri : triangles) {
+        auto wrappedTriangle = *(dynamic_cast<TriangleWrapper*>(tri)); 
+        auto object = wrappedTriangle.getContainingMesh();
+        auto material = materials[object->getMaterialIndex()];
+
+        Intersection i = intersect(ray, *tri, material.smooth);
+        if (i.distance < closestIntersection.distance) {
+            closestIntersection = i;
+            closesObject = object;
         }
     }
-
+    
     if (closestIntersection.distance != INFINITY) {
         return shader::Intersection {
             .point = closestIntersection.point,

@@ -15,3 +15,14 @@ TEST_CASE("Calculates cross product") {
 
     REQUIRE(want == cross);
 }
+
+TEST_CASE("Vector array access with enum") {
+    Vector v(1.5f, 2.5f, 3.5f);
+    
+    REQUIRE(v[AxisEnum::X] == 1.5f);
+    REQUIRE(v[AxisEnum::Y] == 2.5f);
+    REQUIRE(v[AxisEnum::Z] == 3.5f);
+    
+    v[AxisEnum::X] = 10.0f;
+    REQUIRE(v[AxisEnum::X] == 10.0f);
+}
