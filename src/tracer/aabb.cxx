@@ -1,5 +1,7 @@
 #include <vector>
 #include <array>
+#include <algorithm>
+#include <cmath>
 
 #include "aabb.hxx"
 #include "types.hxx"
@@ -75,23 +77,39 @@ AABB AABB::construct(vector<Triangle*> triangles) {
 
 
 
-bool laysOnSide(const Ray& ray, const AABB& aabb, float side, float originSideAxis, float directionSideAxis) {
-    float t = (side - originSideAxis) / directionSideAxis;
-    if (t < 0) {
-        return false;
-    }
-
-    Vector p = ray.origin + t * ray.direction;
-    return p >= aabb.min && p <= aabb.max;
-}
-
 bool doesIntersect(const Ray& ray, const AABB& aabb) {
-    return laysOnSide(ray, aabb, aabb.min[AxisEnum::X], ray.origin[AxisEnum::X], ray.direction[AxisEnum::X]) ||
-        laysOnSide(ray, aabb, aabb.min[AxisEnum::Y], ray.origin[AxisEnum::Y], ray.direction[AxisEnum::Y]) ||
-        laysOnSide(ray, aabb, aabb.min[AxisEnum::Z], ray.origin[AxisEnum::Z], ray.direction[AxisEnum::Z]) ||
-        laysOnSide(ray, aabb, aabb.max[AxisEnum::X], ray.origin[AxisEnum::X], ray.direction[AxisEnum::X]) ||
-        laysOnSide(ray, aabb, aabb.max[AxisEnum::Y], ray.origin[AxisEnum::Y], ray.direction[AxisEnum::Y]) ||
-        laysOnSide(ray, aabb, aabb.max[AxisEnum::Z], ray.origin[AxisEnum::Z], ray.direction[AxisEnum::Z]);
+    float tmin = 0.0f;
+    float tmax = INFINITY;
+    
+    for (int axis = 0; axis < 3; axis++) {
+        float origin = ray.origin[static_cast<AxisEnum>(axis)];
+        float direction = ray.direction[static_cast<AxisEnum>(axis)];
+        float minPlane = aabb.min[static_cast<AxisEnum>(axis)];
+        float maxPlane = aabb.max[static_cast<AxisEnum>(axis)];
+        
+        if (abs(direction) < 1e-9f) {
+            // Ray is parallel to slab
+            if (origin < minPlane || origin > maxPlane) {
+                return false;
+            }
+        } else {
+            float t1 = (minPlane - origin) / direction;
+            float t2 = (maxPlane - origin) / direction;
+            
+            if (t1 > t2) {
+                std::swap(t1, t2);
+            }
+            
+            tmin = std::max(tmin, t1);
+            tmax = std::min(tmax, t2);
+            
+            if (tmin > tmax) {
+                return false;
+            }
+        }
+    }
+    
+    return tmax >= 0;
 }
 
 std::ostream& operator<<(std::ostream& os, const AABB& aabb) {

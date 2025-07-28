@@ -32,7 +32,7 @@ bool leftOfEdge(Vector p, Vector v0, Vector v1, Vector normal) {
     Vector e = v0 - v1;
     Vector vp = v0 - p;
 
-    return normal.dot(e.cross(vp)) > 0;
+    return normal.dot(e.cross(vp)) >= -1e-6;
 }
 
 Intersection intersect(const Ray& ray, const Triangle& tri, bool isSmooth) {

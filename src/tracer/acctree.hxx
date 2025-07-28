@@ -22,15 +22,14 @@ public:
     vector<Triangle*> intersect(const Ray& ray);
 
     int getSize();
-    TreeNode* getNode(int index);
+    TreeNode getNode(int index);
 private:
     int buildBranch(int parent, vector<Triangle*> parentTriangles, AABB aabb, AxisEnum axis, int depth = 0);
 
-    TreeNode* root;
-    vector<TreeNode*> tree;
+    vector<TreeNode> tree;
     int maxDepth;
 };
 
-vector<TreeNode*> buildAccTree(const vector<Triangle*>& triangles);
+vector<TreeNode> buildAccTree(const vector<Triangle*>& triangles);
 
 #endif // ACCTREE_HXX

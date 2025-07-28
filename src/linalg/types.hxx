@@ -13,6 +13,7 @@ struct Color {
 
 bool operator==(const Color& c1, const Color& c2);
 
+Color operator+(const Color& c1, const Color& c2);
 Color operator*(const Color& c, float scalar);
 Color operator*(float scalar, const Color& c);
 Color operator*(const Color& c1, const Color& c2);
@@ -37,7 +38,7 @@ enum AxisEnum {
 };
 
 struct Vector {
-    Vector() = default;
+    Vector() : c{0.0f, 0.0f, 0.0f} {}
     Vector(float x, float y, float z);
     Vector(std::initializer_list<float> coords);
     virtual ~Vector() = default;
@@ -57,6 +58,7 @@ struct Vector {
 };
 
 
+Vector operator-(const Vector& v);
 Vector operator-(const Vector& v1, const Vector& v2);
 Vector operator+(const Vector& v1, const Vector& v2);
 Vector operator*(const Vector& v, float scalar);
@@ -67,6 +69,8 @@ std::ostream& operator<<(std::ostream& os, const Vector& v);
 
 struct Ray {
     Vector origin, direction;
+    
+    friend auto operator<=>(const Ray& r1, const Ray& r2) = default;
 };
 
 class Triangle {

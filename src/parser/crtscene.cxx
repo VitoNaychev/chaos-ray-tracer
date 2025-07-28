@@ -56,6 +56,17 @@ int requireInt(Value& doc, const char* name) {
     return doc[name].GetInt();
 }
 
+float requireFloat(Value& doc, const char* name) {
+    if (!doc.HasMember(name)) {
+        throw runtime_error(format("missing {} key", name));
+    }
+    if (!doc[name].IsFloat()) {
+        throw runtime_error(format("{} is not a float", name));
+    }
+
+    return doc[name].GetFloat();
+}
+
 bool requireBool(Value& doc, const char* name) {
     if (!doc.HasMember(name)) {
         throw runtime_error(format("missing {} key", name));
@@ -154,6 +165,10 @@ MaterialType getMaterialType(string materialString) {
         return MaterialType::Diffuse;
     } else if (materialString == "reflective") {
         return MaterialType::Reflective;
+    } else if (materialString == "refractive") {
+        return MaterialType::Refractive;
+    }else if (materialString == "constant") {
+        return MaterialType::Constant;
     } else {
         throw runtime_error("unkown material type");
     }
@@ -172,11 +187,16 @@ vector<Material> getMaterials(rapidjson::Document& doc) {
 
     auto& materialsField = requireArray(doc, "materials");
     for (auto& materialField : materialsField.GetArray()) {
-        materials.push_back({
+        Material material {
             .type = getMaterialType(requireString(materialField, "type")),
-            .albedo = getMaterialAlbedo(requireArray(materialField, "albedo", 3)),
             .smooth = requireBool(materialField, "smooth_shading"),
-        });
+        };
+        if (material.type == MaterialType::Refractive) {
+            material.ior = requireFloat(materialField, "ior");
+        } else {
+            material.albedo = getMaterialAlbedo(requireArray(materialField, "albedo", 3));
+        }
+        materials.push_back(material);
     }
 
     return materials;

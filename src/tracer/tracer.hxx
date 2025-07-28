@@ -24,6 +24,7 @@ class Tracer : public shader::Tracer{
 public:
     Tracer(const vector<Mesh>& objects, const vector<Material>& materials);
     shader::Intersection trace(const Ray& ray);
+    shader::Intersection traceShadow(const Ray& ray, float maxT);
 private:    
     AccTree accTree;
     const vector<Mesh>& objects;

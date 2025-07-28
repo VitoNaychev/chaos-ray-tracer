@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm> 
 
+#include "scene.hxx"
 #include "tracer.hxx"
 #include "interx.hxx"
 #include "aabb.hxx"
@@ -27,7 +28,7 @@ vector<Triangle*> createWrappedTriangles(const vector<Mesh>& objects) {
 }
 
 Tracer::Tracer(const vector<Mesh>& objects, const vector<Material>& materials) 
-    : objects(objects), materials(materials), accTree(createWrappedTriangles(objects), 1) {
+    : objects(objects), materials(materials), accTree(createWrappedTriangles(objects), 8) {
 }
 
 shader::Intersection Tracer::trace(const Ray& ray) {
@@ -48,6 +49,50 @@ shader::Intersection Tracer::trace(const Ray& ray) {
         if (i.distance < closestIntersection.distance) {
             closestIntersection = i;
             closesObject = object;
+        }
+    }
+    
+    if (closestIntersection.distance != INFINITY) {
+        return shader::Intersection {
+            .point = closestIntersection.point,
+            .distance = closestIntersection.distance,
+            .direction = ray.direction,
+    
+            .normal = closestIntersection.normal,
+            .materialIndex = closesObject->getMaterialIndex(),
+        };
+    } else {
+        return shader::Intersection {
+            .point = Vector{0, 0, 0},
+            .distance = INFINITY,
+            .direction = Vector{0, 0, 0},
+            .normal = Vector{0, 0, 0},
+            .materialIndex = 0        };
+    }
+}
+
+shader::Intersection Tracer::traceShadow(const Ray& ray, float maxT) {
+    Intersection closestIntersection {
+        .distance = INFINITY,
+    };
+
+    const Mesh* closesObject = nullptr;
+
+    vector<Triangle*> triangles = accTree.intersect(ray);
+
+    for (auto tri : triangles) {
+        auto wrappedTriangle = *(dynamic_cast<TriangleWrapper*>(tri)); 
+        auto object = wrappedTriangle.getContainingMesh();
+        auto material = materials[object->getMaterialIndex()];
+
+        if (material.type == MaterialType::Refractive) continue;
+
+        Intersection i = intersect(ray, *tri, material.smooth);
+        if (i.distance <= maxT) {
+            if (i.distance < closestIntersection.distance) {
+                closestIntersection = i;
+                closesObject = object;
+            }
         }
     }
     

@@ -44,11 +44,14 @@ struct Light {
 enum MaterialType {
     Diffuse,
     Reflective,
+    Refractive,
+    Constant,
 };
 
 struct Material {
     MaterialType type;
     Color albedo;
+    float ior;
     bool smooth; 
 };
 

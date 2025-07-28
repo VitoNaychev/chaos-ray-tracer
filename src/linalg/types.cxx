@@ -7,6 +7,10 @@ bool operator==(const Color& c1, const Color& c2) {
     return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b;
 }
 
+Color operator+(const Color& c1, const Color& c2) {
+    return Color{c1.r + c2.r, c1.g + c2.g, c1.b + c2.b};
+}
+
 Color operator*(const Color& c, float scalar) {
     return Color{c.r * scalar, c.g * scalar, c.b * scalar};
 }
@@ -69,6 +73,10 @@ Vector Vector::cross(const Vector& rhs) {
 
 float Vector::dot(const Vector& rhs) const {
     return (c[AxisEnum::X] * rhs.c[AxisEnum::X]) + (c[AxisEnum::Y] * rhs.c[AxisEnum::Y]) + (c[AxisEnum::Z] * rhs.c[AxisEnum::Z]); 
+}
+
+Vector operator-(const Vector& v) {
+    return Vector(-v.c[AxisEnum::X], -v.c[AxisEnum::Y], -v.c[AxisEnum::Z]);
 }
 
 Vector operator-(const Vector& v1, const Vector& v2) {

@@ -30,7 +30,7 @@ TEST_CASE("returns acc tree with one node on one triangle input") {
 
     REQUIRE(tree.getSize() == 1);
 
-    REQUIRE(tree.getNode(0)->triangles == triangles);
+    REQUIRE(tree.getNode(0).triangles == triangles);
 }
 
 TEST_CASE("returns acc tree for two triangles split over X plane") {
@@ -62,8 +62,8 @@ TEST_CASE("returns acc tree for two triangles split over X plane") {
 
     REQUIRE(tree.getSize() == 3);
 
-    REQUIRE(tree.getNode(1)->triangles == wantLeftChildTriangles);
-    REQUIRE(tree.getNode(2)->triangles == wantRightChildTriangles);
+    REQUIRE(tree.getNode(1).triangles == wantLeftChildTriangles);
+    REQUIRE(tree.getNode(2).triangles == wantRightChildTriangles);
 }
 
 TEST_CASE("ray intersection returns correct triangles") {
@@ -111,8 +111,8 @@ TEST_CASE("all input triangles are preserved in tree") {
     for (int i = 0; i < tree.getSize(); i++) {
         auto node = tree.getNode(i);
         allTreeTriangles.insert(allTreeTriangles.end(), 
-                               node->triangles.begin(), 
-                               node->triangles.end());
+                               node.triangles.begin(), 
+                               node.triangles.end());
     }
     
     // Verify each input triangle appears at least once

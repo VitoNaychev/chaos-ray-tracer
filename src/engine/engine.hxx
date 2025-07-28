@@ -25,7 +25,7 @@ public:
 class Shader {
 public:
     virtual ~Shader() = default;
-    virtual Color shade(const Ray& ray) = 0;
+    virtual Color shade(const Ray& ray, int depth = 0) = 0;
 };
 
 typedef std::function<RayGen*(const Scene&)> RayGenFactory;
