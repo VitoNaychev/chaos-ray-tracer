@@ -21,9 +21,12 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/src/linalg)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/pixeldrawer)
 # add_subdirectory(${CMAKE_SOURCE_DIR}/src/visualizer)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/src/raygen)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/scene)
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/animation)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/parser)
+
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/src/raygen)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/shader)
 add_subdirectory(${CMAKE_SOURCE_DIR}/src/tracer)
 
