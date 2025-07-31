@@ -32,8 +32,8 @@ AccTree::AccTree(vector<Triangle*> triangles, int maxDepth) : maxDepth(maxDepth)
     }
     auto split = root.aabb.split(AxisEnum::X);
 
-    tree[0].leftChild = buildBranch(1, triangles, split[0], AxisEnum::X, 1);
-    tree[0].rightChild = buildBranch(1, triangles, split[1], AxisEnum::X, 1);
+    tree[0].leftChild = buildBranch(0, triangles, split[0], AxisEnum::X, 1);
+    tree[0].rightChild = buildBranch(0, triangles, split[1], AxisEnum::X, 1);
 }
 
 
@@ -70,19 +70,20 @@ int AccTree::buildBranch(int parent, vector<Triangle*> parentTriangles, AABB aab
 vector<Triangle*> AccTree::intersect(const Ray& ray) {
     vector<Triangle*> intersectingTriangles;
 
-    stack<TreeNode> nodeStack;
-    nodeStack.push(tree[0]);
+    stack<int> nodeStack;
+    nodeStack.push(0);
 
     while (!nodeStack.empty()) {
-        auto curNode = nodeStack.top();
+        int index = nodeStack.top();
         nodeStack.pop();
 
+        auto& curNode = tree[index];
         if (doesIntersect(ray, curNode.aabb)) {
             if (curNode.leftChild != -1) {
-                nodeStack.push(tree[curNode.leftChild]);
+                nodeStack.push(curNode.leftChild);
             }
             if (curNode.rightChild != -1) {
-                nodeStack.push(tree[curNode.rightChild]);
+                nodeStack.push(curNode.rightChild);
             }
             if (curNode.triangles.size() != 0) {
                 intersectingTriangles.insert(intersectingTriangles.end(),

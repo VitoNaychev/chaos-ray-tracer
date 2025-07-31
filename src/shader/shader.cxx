@@ -50,9 +50,9 @@ Ray Shader::generateRefractionRay(const Intersection& interx, float refractIndex
 
     auto angleCos = -adjustedNormal.dot(interx.direction);
     auto angleSin = std::sqrt(1 - angleCos * angleCos);
-    // if (angleSin > 1 / snellCoeff) {
-    //     return Ray{};
-    // }
+    if (angleSin > 1 / snellCoeff) {
+        return Ray{};
+    }
 
     auto refractionAngleSin = angleSin * snellCoeff;
     auto refractionAngleCos = std::sqrt(1 - refractionAngleSin * refractionAngleSin);
@@ -98,9 +98,9 @@ Color Shader::shadeRefractive(const Intersection& interx, int depth) {
     
     auto reflectionRay = generateReflectionRay(interx, adjustedNormal * 1e-4);
     auto refractionRay = generateRefractionRay(interx, material.ior);
-    // if (refractionRay == Ray{}) {
-    //     return shade(reflectionRay, depth + 1) ;
-    // }
+    if (refractionRay == Ray{}) {
+        return shade(reflectionRay, depth + 1) ;
+    }
 
     return fresnelCoeff * shade(reflectionRay, depth + 1) + (1 - fresnelCoeff) * shade(refractionRay, depth + 1);
 }  

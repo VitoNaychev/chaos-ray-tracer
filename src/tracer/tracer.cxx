@@ -28,7 +28,7 @@ vector<Triangle*> createWrappedTriangles(const vector<Mesh>& objects) {
 }
 
 Tracer::Tracer(const vector<Mesh>& objects, const vector<Material>& materials) 
-    : objects(objects), materials(materials), accTree(createWrappedTriangles(objects), 8) {
+    : objects(objects), materials(materials), accTree(createWrappedTriangles(objects), 10) {
 }
 
 shader::Intersection Tracer::trace(const Ray& ray) {
