@@ -16,9 +16,13 @@ PPMColor toPPMColor(const Color& c) {
     
 const int uint8_max = 255;
 
-PPMDrawer::PPMDrawer(ostream& out, int width, int height) 
+PPMDrawer::PPMDrawer(ostream* out, int width, int height) 
     : out {out}, width {width}, height {height}, pixels (width * height) {
     writeHeader(out, width, height);
+}
+
+PPMDrawer::~PPMDrawer() {
+    delete out;
 }
 
 void PPMDrawer::draw(int x, int y, const Color& c) {
@@ -27,13 +31,12 @@ void PPMDrawer::draw(int x, int y, const Color& c) {
 
 void PPMDrawer::flush() {
     for (auto c : pixels) {
-        out << to_string(c.r) << " " << to_string(c.g) << " " << to_string(c.b) << " ";
+        *out << to_string(c.r) << " " << to_string(c.g) << " " << to_string(c.b) << " ";
     }
 }   
 
-
-void PPMDrawer::writeHeader(ostream& out, int width, int height) {
-    out << "P3" << endl;
-    out << to_string(width) << " " << to_string(height) << endl;
-    out << to_string(UINT8_MAX) << endl;
+void PPMDrawer::writeHeader(ostream* out, int width, int height) {
+    *out << "P3" << endl;
+    *out << to_string(width) << " " << to_string(height) << endl;
+    *out << to_string(UINT8_MAX) << endl;
 }

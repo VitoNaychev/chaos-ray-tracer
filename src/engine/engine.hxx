@@ -1,5 +1,5 @@
-#ifndef ENGINENEW_HXX
-#define ENGINENEW_HXX
+#ifndef ENGINE_HXX
+#define ENGINE_HXX
 
 #include <vector>
 #include <functional>
@@ -38,7 +38,13 @@ struct Edge {
 
 class Engine {
 public:
-    Engine(RayGenFactory raygenFactory, ShaderFactory shaderFactory);
+    virtual ~Engine() = default;
+    virtual void renderThreaded(Scene& scene, Drawer& drawer) = 0;
+};
+
+class RayTraceEngine : public Engine {
+public:
+    RayTraceEngine(RayGenFactory raygenFactory, ShaderFactory shaderFactory);
 
     void render(Scene& scene, Drawer& drawer);
     void renderThreaded(Scene& scene, Drawer& drawer);

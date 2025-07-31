@@ -46,6 +46,31 @@ float Camera::getFOV() const {
     return fov;
 }
 
+void Camera::move(MovementType movement, float units) {
+    switch (movement) {
+        case MovementType::Dolly:
+        dolly(units);
+        break;
+        case MovementType::Jib:
+        jib(units);
+        break;
+        case MovementType::Truck:
+        truck(units);
+        break;
+
+        case MovementType::Pan:
+        pan(units);
+        break;
+
+        case MovementType::Zoom:
+        setFOV(units);
+        break;
+        
+        default:
+        break;
+    }
+}
+
 Mesh::Mesh(vector<Vertex> vertices, vector<int> triangleIndicies, int materialIndex): 
     vertices {vertices}, triangleIndicies {triangleIndicies}, materialIndex {materialIndex} {
     for (size_t i = 0; i < triangleIndicies.size(); i += 3) {

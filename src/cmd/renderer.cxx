@@ -21,16 +21,16 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::ifstream sceneFile(argv[1]); 
+    ifstream sceneFile(argv[1]); 
     if (!sceneFile) {
-        std::cerr << "Failed to open file.\n";
+        cerr << "Failed to open file.\n";
     }
     Scene scene = parseCRTScene(sceneFile);
     Settings& settings = scene.settings;
 
-    std::ofstream outFile(argv[2]); 
+    auto outFile = new ofstream(argv[2]); 
     if (!outFile) {
-        std::cerr << "Failed to open file.\n";
+        cerr << "Failed to open file.\n";
     }
     PPMDrawer drawer(outFile, settings.width, settings.height);
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
         return shaderFactory.factory(scene);
     };    
 
-    engine::Engine engine(raygen::factory, shaderFactoryFn);
+    engine::RayTraceEngine engine(raygen::factory, shaderFactoryFn);
     engine.renderThreaded(scene, drawer);
 
     return 0;

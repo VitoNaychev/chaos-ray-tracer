@@ -9,12 +9,29 @@ struct Vertex : public Vector {
     Vector normal;
 };
 
+
+enum class MovementType {
+    Dolly,
+    Jib,
+    Truck,
+
+    Pan,
+    Tilt,
+    Roll,
+
+    Arc,
+
+    Zoom,
+};
+
 class Camera {
 public:
     Camera(Vector position, Matrix rotation);
 
     Matrix getRotation();
     Vector getPosition();
+
+    void move(MovementType movement, float units);
 
     void dolly(const float z);
     void jib(const float y);

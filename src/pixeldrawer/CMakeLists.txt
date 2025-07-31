@@ -9,6 +9,11 @@ add_library(PixelDrawer ppm.cpp)
 target_link_libraries(PixelDrawer PUBLIC Engine)
 target_include_directories(PixelDrawer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
+add_library(PixelDrawerFactory factory.cxx)
+target_link_libraries(PixelDrawerFactory PUBLIC Animation PixelDrawer)
+target_include_directories(PixelDrawerFactory INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+
 # include(CTest)
 
 # # Fetch Catch2 v3.x

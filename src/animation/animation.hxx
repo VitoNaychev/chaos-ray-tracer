@@ -1,19 +1,11 @@
 #ifndef ANIMATION_HXX
 #define ANIMATION_HXX
 
-enum class MovementType {
-    Dolly,
-    Jib,
-    Truck,
+#include "engine.hxx"
 
-    Pan,
-    Tilt,
-    Roll,
+#include <vector>
 
-    Arc,
-
-    Zoom,
-};
+using namespace std;
 
 struct Clip {
     MovementType movement;
@@ -22,14 +14,21 @@ struct Clip {
     int framesCount;
 };
 
-class Engine {
 
+class DrawerFactory {
+public:
+    virtual ~DrawerFactory() = default;
+    virtual engine::Drawer* get() = 0;
 };
 
 class Animator {
+public:
+    Animator(engine::Engine* engine, DrawerFactory* drawerFactory);
 
+    void animate(Scene scene, vector<Clip> animation);
 private: 
-
+    engine::Engine* engine;
+    DrawerFactory* drawerFactory;
 };
 
 #endif // ANIMATION_HXX

@@ -12,10 +12,10 @@
 namespace engine{
 
 
-Engine::Engine(RayGenFactory raygenFactory, ShaderFactory shaderFactory) 
+RayTraceEngine::RayTraceEngine(RayGenFactory raygenFactory, ShaderFactory shaderFactory) 
     : raygenFactory{raygenFactory}, shaderFactory{shaderFactory} {}
 
-void Engine::render(Scene& scene, Drawer& drawer) {
+void RayTraceEngine::render(Scene& scene, Drawer& drawer) {
     auto raygen = raygenFactory(scene);
     auto shader = shaderFactory(scene);
 
@@ -28,7 +28,7 @@ void Engine::render(Scene& scene, Drawer& drawer) {
     drawer.flush();
 }
 
-void Engine::renderThreaded(Scene& scene, Drawer& drawer) {
+void RayTraceEngine::renderThreaded(Scene& scene, Drawer& drawer) {
     auto raygen = raygenFactory(scene);
     auto shader = shaderFactory(scene);
     
@@ -53,9 +53,10 @@ void Engine::renderThreaded(Scene& scene, Drawer& drawer) {
 
     workQueue.wait();
     drawer.flush();
+    
 }
 
-void Engine::renderSection(Drawer& drawer, RayGen* raygen, Shader* shader, Edge start, Edge end) {
+void RayTraceEngine::renderSection(Drawer& drawer, RayGen* raygen, Shader* shader, Edge start, Edge end) {
     for (int i = start.y; i < end.y; i++) {
         for (int j = start.x; j < end.x; j++) {
             Ray ray = raygen->generate(j, i);

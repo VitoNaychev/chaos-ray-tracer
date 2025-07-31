@@ -13,16 +13,17 @@ struct PPMColor {
 
 class PPMDrawer : public engine::Drawer {
 public:
-    PPMDrawer(std::ostream& out, int width, int height);
-
+    PPMDrawer(std::ostream* out, int width, int height);
+    ~PPMDrawer();
+    
     void draw(int x, int y, const Color& c);
     void flush();
 private:
-    std::ostream& out;
+    std::ostream*  out;
     int width, height;
     std::vector<PPMColor> pixels;
 
-    void writeHeader(std::ostream& out, int width, int height);
+    void writeHeader(std::ostream* out, int width, int height);
 };
 
 #endif

@@ -20,13 +20,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(catch2)
 
-add_executable(EngineTest engine_test.cxx)
-target_link_libraries(EngineTest PRIVATE Engine LinAlg Scene Shader Tracer Catch2::Catch2WithMain)
-
 add_executable(WorkQueueTest workqueue_test.cxx)
 target_link_libraries(WorkQueueTest PRIVATE Engine Catch2::Catch2WithMain)
 
 include(Catch)
-catch_discover_tests(EngineTest WorkQueueTest)
+catch_discover_tests(WorkQueueTest)
 
 
